@@ -370,7 +370,7 @@ const file_account_proto_rawDesc = "" +
 	"\vPostAccount\x12\x1c.genproto.PostAccountRequest\x1a\x1d.genproto.PostAccountResponse\"\x00\x12I\n" +
 	"\n" +
 	"GetAccount\x12\x1b.genproto.GetAccountRequest\x1a\x1c.genproto.GetAccountResponse\"\x00\x12L\n" +
-	"\vGetAccounts\x12\x1c.genproto.GetAccountsRequest\x1a\x1d.genproto.GetAccountsResponse\"\x00B#Z!github.com/wignn/micro-3/genprotob\x06proto3"
+	"\vGetAccounts\x12\x1c.genproto.GetAccountsRequest\x1a\x1d.genproto.GetAccountsResponse\"\x00B+Z)github.com/wignn/micro-3/account/genprotob\x06proto3"
 
 var (
 	file_account_proto_rawDescOnce sync.Once

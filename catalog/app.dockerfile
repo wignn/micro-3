@@ -8,7 +8,7 @@ COPY go.mod go.sum ./
 COPY vendor vendor
 COPY account account
 
-RUN GO111MODULE=on go build -mod vendor -o /go/bin/app ./account/cmd/account
+RUN GO111MODULE=on go build -mod vendor -o /go/bin/app ./catalog/cmd/catalog
 
 FROM alpine:3.21
 
@@ -18,4 +18,4 @@ COPY --from=build /go/bin .
 
 EXPOSE 8080
 
-CMD ["grpc-graphql-account"]
+CMD ["app"]

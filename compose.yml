@@ -8,16 +8,26 @@ services:
     env_file: ./account/.env
     restart: on-failure
     ports:
-      - "8080:8080" # opsional, sesuaikan
+      - "8080:8080"
+  
+  catalog:
+    build:
+      context: .
+      dockerfile: ./catalog/app.dockerfile
+    depends_on:
+      - catalog_db
+    environment:
+      DATABASE_URL: http://catalog_db:9200
+    restart: on-failure
 
   account_db:
     build:
       context: ./account
       dockerfile: ./db.dockerfile
-    environment:
-      POSTGRES_DB: account_db
-      POSTGRES_USER: account_user
-      POSTGRES_PASSWORD: 123456
+    env_file: ./account/.env
     restart: unless-stopped
-    ports:
-      - "5432:5432"  # opsional, kalau mau akses dari host
+    
+  catalog_db:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    env_file: .env
+ 

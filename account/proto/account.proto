@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package genproto;
 
-option go_package = "github.com/wignn/micro-3/genproto";
+option go_package = "github.com/wignn/micro-3/account/genproto";
 
 message Account {
     string id = 1;

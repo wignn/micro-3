@@ -14,8 +14,6 @@ type AccountService  interface {
 }
 
 
-
-
 type accountService struct {
 	repository repository.AccountRepository
 }
