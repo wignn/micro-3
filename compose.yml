@@ -1,16 +1,23 @@
 services:
-  accounts:
+  account:
+    build:
+      context: .
+      dockerfile: ./account/app.dockerfile
+    depends_on:
+      - account_db
+    env_file: ./account/.env
+    restart: on-failure
+    ports:
+      - "8080:8080" # opsional, sesuaikan
 
-  catalog:
-
-  order:
-
-  graphql:
-
-
-  accountdb:
-  
-
-  catalogdb:
-
-  orderdb:
+  account_db:
+    build:
+      context: ./account
+      dockerfile: ./db.dockerfile
+    environment:
+      POSTGRES_DB: account_db
+      POSTGRES_USER: account_user
+      POSTGRES_PASSWORD: 123456
+    restart: unless-stopped
+    ports:
+      - "5432:5432"  # opsional, kalau mau akses dari host
