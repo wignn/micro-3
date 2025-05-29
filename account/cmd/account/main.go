@@ -35,9 +35,8 @@ func main() {
 	})
 
 	defer r.Close()
+
 	log.Println("listening on port", cfg.Port)
-
 	s := service.NewAccountService(r)
-
 	log.Fatal(server.ListenGRPC(s, cfg.Port))	
 }

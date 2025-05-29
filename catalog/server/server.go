@@ -29,8 +29,8 @@ func ListenGRPC(s service.CatalogService, port int) error {
 	return serv.Serve(lis)
 }
 
-func (s *grpcServer) PostProduct(ctx context.Context, r *genproto.PostProductRequest) (*genproto.PostProductResponse, error) {
-	p, err := s.service.PostProduct(ctx, r.Name, r.Description, r.Price)
+func (s *grpcServer) PostProduct(c context.Context, r *genproto.PostProductRequest) (*genproto.PostProductResponse, error) {
+	p, err := s.service.PostProduct(c, r.Name, r.Description, r.Price)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -43,8 +43,8 @@ func (s *grpcServer) PostProduct(ctx context.Context, r *genproto.PostProductReq
 	}}, nil
 }
 
-func (s *grpcServer) GetProduct(ctx context.Context, r *genproto.GetProductRequest) (*genproto.GetProductResponse, error) {
-	p, err := s.service.GetProduct(ctx, r.Id)
+func (s *grpcServer) GetProduct(c context.Context, r *genproto.GetProductRequest) (*genproto.GetProductResponse, error) {
+	p, err := s.service.GetProduct(c, r.Id)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -59,15 +59,16 @@ func (s *grpcServer) GetProduct(ctx context.Context, r *genproto.GetProductReque
 	}, nil
 }
 
-func (s *grpcServer) GetProducts(ctx context.Context, r *genproto.GetProductsRequest) (*genproto.GetProductsResponse, error) {
+func (s *grpcServer) GetProducts(c context.Context, r *genproto.GetProductsRequest) (*genproto.GetProductsResponse, error) {
 	var res []*model.Product
 	var err error
+	
 	if r.Query != "" {
-		res, err = s.service.SearchProducts(ctx, r.Query, r.Skip, r.Take)
+		res, err = s.service.SearchProducts(c, r.Query, r.Skip, r.Take)
 	} else if len(r.Ids) != 0 {
-		res, err = s.service.GetProductsByIDs(ctx, r.Ids)
+		res, err = s.service.GetProductsByIDs(c, r.Ids)
 	} else {
-		res, err = s.service.GetProducts(ctx, r.Skip, r.Take)
+		res, err = s.service.GetProducts(c, r.Skip, r.Take)
 	}
 	if err != nil {
 		log.Println(err)
