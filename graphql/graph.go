@@ -2,13 +2,14 @@ package main
 
 import (
 	"github.com/99designs/gqlgen/graphql"
-	accountpb "github.com/wignn/micro-3/account/genproto"
-	catalogpb "github.com/wignn/micro-3/catalog/genproto"
+	account "github.com/wignn/micro-3/account/client"
+	catalog "github.com/wignn/micro-3/catalog/client"
+	order "github.com/wignn/micro-3/order/client"
 )
 
 type GraphQLServer struct {
-	accountClient *accountpb.AccountServiceClient
-	catalogClient *catalogpb.CatalogServiceClient
+	accountClient *account.AccountClient
+	catalogClient *catalog.CatalogClient
 	orderClient  *order.Client
 }
 

@@ -5,11 +5,11 @@ services:
       dockerfile: ./account/app.dockerfile
     depends_on:
       - account_db
-    env_file: ./account/.env
+    environment:
+      DATABASE_URL: postgres://wignn:123456@account_db/account?sslmode=disable
+      PORT: 8080
     restart: on-failure
-    ports:
-      - "8080:8080"
-  
+
   catalog:
     build:
       context: .
@@ -18,16 +18,70 @@ services:
       - catalog_db
     environment:
       DATABASE_URL: http://catalog_db:9200
+      PORT: 8080
+    restart: on-failure
+
+  order:
+    build:
+      context: .
+      dockerfile: ./order/app.dockerfile
+    depends_on:
+      - order_db
+    environment:
+      DATABASE_URL: postgres://wignn:123456@order_db/order?sslmode=disable
+      ACCOUNT_SERVICE_URL: account:8080
+      CATALOG_SERVICE_URL: catalog:8080
+      PORT: 8080
+    restart: on-failure
+
+  graphql:
+    build:
+      context: .
+      dockerfile: ./graphql/app.dockerfile
+    ports:
+      - 8000:8080
+    depends_on:
+      - account
+      - catalog
+    environment:
+      ACCOUNT_SERVICE_URL: account:8080
+      CATALOG_SERVICE_URL: catalog:8080
+      ORDER_SERVICE_URL: order:8080
     restart: on-failure
 
   account_db:
     build:
       context: ./account
       dockerfile: ./db.dockerfile
-    env_file: ./account/.env
+    environment:
+      POSTGRES_DB: account
+      POSTGRES_USER: wignn
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - account_db_data:/var/lib/postgresql/data
     restart: unless-stopped
-    
+
   catalog_db:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
-    env_file: .env
- 
+    environment:
+      ES_JAVA_OPTS: -Xms1g -Xmx1g
+      discovery.type: single-node
+    volumes:
+      - catalog_db_data:/usr/share/elasticsearch/data
+
+  order_db:
+    build:
+      context: ./order
+      dockerfile: ./db.dockerfile
+    environment:
+      POSTGRES_DB: order
+      POSTGRES_USER: wignn
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - order_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  account_db_data:
+  catalog_db_data:
+  order_db_data:

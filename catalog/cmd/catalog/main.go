@@ -11,14 +11,14 @@ import (
 	"github.com/wignn/micro-3/catalog/service"
 )
 
-type config struct {
-	Port int    `env:"PORT" envDefault:"50051"`
-	Host string `env:"HOST" envDefault:"localhost"`
-	DSN  string `env:"DSN"`
+type Config struct {
+	DSN string `envconfig:"DATABASE_URL"`
+	PORT int    `envconfig:"PORT" default:"50051"`
 }
 
+
 func main() {
-	var cfg config
+	var cfg Config
 	if err := envconfig.Process("", &cfg); err != nil {
 		log.Fatal("Failed to process environment variables:", err)
 	}
@@ -33,7 +33,7 @@ func main() {
 	})
 	defer r.Close()
 
-	log.Println("Listening on port", cfg.Port)
+	log.Println("Listening on port", cfg.PORT)
 	s := service.NewCatalogService(r)
-	log.Fatal(server.ListenGRPC(s, cfg.Port))
+	log.Fatal(server.ListenGRPC(s, cfg.PORT))
 }
