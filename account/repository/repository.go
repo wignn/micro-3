@@ -45,7 +45,7 @@ func (r *PostgresRepository) Ping() error {
 }
 
 func (r *PostgresRepository) PutAccount(c context.Context, a *model.Account) error {
-	_, err := r.db.ExecContext(c, "INSERT INTO accounts (id, name) VALUES ($1, $2)", a.ID, a.Name,)
+	_, err := r.db.ExecContext(c, "INSERT INTO accounts (id, name, email, password) VALUES ($1, $2, $3, $4)", a.ID, a.Name, a.Email, a.Password)
 	if err != nil {
 		return err
 	}

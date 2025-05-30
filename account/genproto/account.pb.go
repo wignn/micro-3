@@ -25,6 +25,7 @@ type Account struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -73,9 +74,18 @@ func (x *Account) GetName() string {
 	return ""
 }
 
+func (x *Account) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
 type PostAccountRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	Password      string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -113,6 +123,20 @@ func (*PostAccountRequest) Descriptor() ([]byte, []int) {
 func (x *PostAccountRequest) GetName() string {
 	if x != nil {
 		return x.Name
+	}
+	return ""
+}
+
+func (x *PostAccountRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *PostAccountRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
 	}
 	return ""
 }
@@ -349,12 +373,15 @@ var File_account_proto protoreflect.FileDescriptor
 
 const file_account_proto_rawDesc = "" +
 	"\n" +
-	"\raccount.proto\x12\bgenproto\"-\n" +
+	"\raccount.proto\x12\bgenproto\"C\n" +
 	"\aAccount\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"(\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\"Z\n" +
 	"\x12PostAccountRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"B\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
+	"\x05email\x18\x02 \x01(\tR\x05email\x12\x1a\n" +
+	"\bpassword\x18\x03 \x01(\tR\bpassword\"B\n" +
 	"\x13PostAccountResponse\x12+\n" +
 	"\aaccount\x18\x01 \x01(\v2\x11.genproto.AccountR\aaccount\"#\n" +
 	"\x11GetAccountRequest\x12\x0e\n" +
@@ -365,12 +392,12 @@ const file_account_proto_rawDesc = "" +
 	"\x04skip\x18\x01 \x01(\x04R\x04skip\x12\x12\n" +
 	"\x04take\x18\x02 \x01(\x04R\x04take\"D\n" +
 	"\x13GetAccountsResponse\x12-\n" +
-	"\baccounts\x18\x01 \x03(\v2\x11.genproto.AccountR\baccounts2\xf7\x01\n" +
-	"\x0eAccountService\x12L\n" +
-	"\vPostAccount\x12\x1c.genproto.PostAccountRequest\x1a\x1d.genproto.PostAccountResponse\"\x00\x12I\n" +
+	"\baccounts\x18\x01 \x03(\v2\x11.genproto.AccountR\baccounts2\xf1\x01\n" +
+	"\x0eAccountService\x12J\n" +
+	"\vPostAccount\x12\x1c.genproto.PostAccountRequest\x1a\x1d.genproto.PostAccountResponse\x12G\n" +
 	"\n" +
-	"GetAccount\x12\x1b.genproto.GetAccountRequest\x1a\x1c.genproto.GetAccountResponse\"\x00\x12L\n" +
-	"\vGetAccounts\x12\x1c.genproto.GetAccountsRequest\x1a\x1d.genproto.GetAccountsResponse\"\x00B+Z)github.com/wignn/micro-3/account/genprotob\x06proto3"
+	"GetAccount\x12\x1b.genproto.GetAccountRequest\x1a\x1c.genproto.GetAccountResponse\x12J\n" +
+	"\vGetAccounts\x12\x1c.genproto.GetAccountsRequest\x1a\x1d.genproto.GetAccountsResponseB+Z)github.com/wignn/micro-3/account/genprotob\x06proto3"
 
 var (
 	file_account_proto_rawDescOnce sync.Once

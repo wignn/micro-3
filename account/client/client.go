@@ -27,23 +27,24 @@ func (cl *AccountClient) Close() {
 	cl.conn.Close()
 }
 
-func (cl *AccountClient) PostAccount(c context.Context, name string) (*model.Account, error) {
+func (cl *AccountClient) PostAccount(c context.Context, name, email, password string) (*model.AccountResponse, error) {
 	r, err := cl.service.PostAccount(
 		c,
-		&genproto.PostAccountRequest{Name: name},
+		&genproto.PostAccountRequest{Name: name, Email: email, Password: password},
 	)
 	if err != nil {
 		return nil, err
 	}
 
-	return &model.Account{
+	return &model.AccountResponse{
 		ID:   r.Account.Id,
 		Name: r.Account.Name,
+		Email: r.Account.Email,
 	}, nil
 }
 
 
-func (cl *AccountClient) GetAccount(c context.Context, id string) (*model.Account, error) {
+func (cl *AccountClient) GetAccount(c context.Context, id string) (*model.AccountResponse, error) {
 	r, err := cl.service.GetAccount(
 		c,
 		&genproto.GetAccountRequest{Id: id},
@@ -52,13 +53,14 @@ func (cl *AccountClient) GetAccount(c context.Context, id string) (*model.Accoun
 		return nil, err
 	}
 
-	return &model.Account{
+	return &model.AccountResponse{
 		ID:   r.Account.Id,
 		Name: r.Account.Name,
+		Email: r.Account.Email,
 	}, nil
 }
 
-func (cl *AccountClient) GetAccounts(c context.Context, skip, take uint64) ([]*model.Account, error) {
+func (cl *AccountClient) GetAccounts(c context.Context, skip, take uint64) ([]*model.AccountResponse, error) {
 	r, err := cl.service.GetAccounts(
 		c,
 		&genproto.GetAccountsRequest{Skip: skip, Take: take},
@@ -67,11 +69,12 @@ func (cl *AccountClient) GetAccounts(c context.Context, skip, take uint64) ([]*m
 		return nil, err
 	}
 
-	var accounts []*model.Account
+	var accounts []*model.AccountResponse
 	for _, a := range r.Accounts {
-		accounts = append(accounts, &model.Account{
+		accounts = append(accounts, &model.AccountResponse{
 			ID:   a.Id,
 			Name: a.Name,
+			Email: a.Email,
 		})
 	}
 

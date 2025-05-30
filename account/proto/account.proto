@@ -7,10 +7,13 @@ option go_package = "github.com/wignn/micro-3/account/genproto";
 message Account {
     string id = 1;
     string name = 2;
+    string email = 3; 
 }
 
 message PostAccountRequest {
     string name = 1;
+    string email = 2;
+    string password = 3;
 }
 
 message PostAccountResponse {
@@ -35,10 +38,7 @@ message GetAccountsResponse {
 }
 
 service AccountService {
-    rpc PostAccount (PostAccountRequest) returns (PostAccountResponse) {
-    }
-    rpc GetAccount (GetAccountRequest) returns (GetAccountResponse) {
-    }
-    rpc GetAccounts (GetAccountsRequest) returns (GetAccountsResponse) {
-    }
+    rpc PostAccount (PostAccountRequest) returns (PostAccountResponse);
+    rpc GetAccount (GetAccountRequest) returns (GetAccountResponse);
+    rpc GetAccounts (GetAccountsRequest) returns (GetAccountsResponse);
 }

@@ -1,0 +1,19 @@
+{
+  "name": "account-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "database.hostname": "account_db",
+    "database.port": "5432",
+    "database.user": "wignn",
+    "database.password": "123456",
+    "database.dbname": "account",
+    "database.server.name": "accountdb",
+    "plugin.name": "pgoutput",
+    "slot.name": "account_slot",
+    "table.include.list": "public.accounts",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter.schemas.enable": "false"
+  }
+}

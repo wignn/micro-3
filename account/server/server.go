@@ -27,7 +27,7 @@ func ListenGRPC(s service.AccountService, port int) error {
 }
 
 func (s *grpcServer) PostAccount(ctx context.Context, req *genproto.PostAccountRequest) (*genproto.PostAccountResponse, error) {
-	a, err := s.service.PostAccount(ctx, req.Name)
+	a, err := s.service.PostAccount(ctx, req.Name, req.Email, req.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -36,6 +36,7 @@ func (s *grpcServer) PostAccount(ctx context.Context, req *genproto.PostAccountR
 		Account: &genproto.Account{
 			Id:   a.ID,
 			Name: a.Name,
+			Email: a.Email,
 		},
 	}, nil
 }

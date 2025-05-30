@@ -18,20 +18,24 @@ type mutationResolver struct {
 }
 
 func (r *mutationResolver) CreateAccount(ctx context.Context, in AccountInput) (*Account, error) {
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
-	defer cancel()
+    ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+    defer cancel()
 
-	a, err := r.server.accountClient.PostAccount(ctx, in.Name)
-	if err != nil {
-		log.Println(err)
-		return nil, err
-	}
+    a, err := r.server.accountClient.PostAccount(ctx, in.Name, in.Email, in.Password)
+    if err != nil {
+        log.Println(err)
+        return nil, err
+    }
 
-	return &Account{
-		ID:   a.ID,
-		Name: a.Name,
-	}, nil
+    account := &Account{
+        ID:    a.ID,
+        Name:  a.Name,
+        Email: a.Email,
+    }
+
+    return account, nil
 }
+
 
 func (r *mutationResolver) CreateProduct(ctx context.Context, in ProductInput) (*Product, error) {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)

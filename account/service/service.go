@@ -5,10 +5,11 @@ import (
 	"github.com/segmentio/ksuid"
 	"github.com/wignn/micro-3/account/model"
 	"github.com/wignn/micro-3/account/repository"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AccountService  interface {
-	PostAccount(c context.Context, name string) (*model.Account, error)
+	PostAccount(c context.Context, name, email, password string) (*model.Account, error)
 	GetAccount(c context.Context, id string) (*model.Account, error)
 	ListAccount(c context.Context, skip uint64, take uint64) ([]*model.Account, error)
 }
@@ -22,11 +23,18 @@ func NewAccountService(r repository.AccountRepository) AccountService {
 	return &accountService{r}
 }
 
-func (s *accountService) PostAccount(c context.Context, name string) (*model.Account, error) {
+func (s *accountService) PostAccount(c context.Context, name, email, password string) (*model.Account, error) {
 	
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+
 	a := &model.Account{
 		Name: name,
 		ID: ksuid.New().String(),
+		Email: email,
+		Password: string(hashPassword),
 	}
 
 	if err := s.repository.PutAccount(c, a); err != nil {
