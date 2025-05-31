@@ -27,6 +27,7 @@ type Product struct {
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	Price         float64                `protobuf:"fixed64,4,opt,name=price,proto3" json:"price,omitempty"`
+	Image         string                 `protobuf:"bytes,5,opt,name=image,proto3" json:"image,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -89,11 +90,19 @@ func (x *Product) GetPrice() float64 {
 	return 0
 }
 
+func (x *Product) GetImage() string {
+	if x != nil {
+		return x.Image
+	}
+	return ""
+}
+
 type PostProductRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Description   string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
 	Price         float64                `protobuf:"fixed64,3,opt,name=price,proto3" json:"price,omitempty"`
+	Image         string                 `protobuf:"bytes,4,opt,name=image,proto3" json:"image,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -147,6 +156,13 @@ func (x *PostProductRequest) GetPrice() float64 {
 		return x.Price
 	}
 	return 0
+}
+
+func (x *PostProductRequest) GetImage() string {
+	if x != nil {
+		return x.Image
+	}
+	return ""
 }
 
 type PostProductResponse struct {
@@ -397,16 +413,18 @@ var File_catalog_proto protoreflect.FileDescriptor
 
 const file_catalog_proto_rawDesc = "" +
 	"\n" +
-	"\rcatalog.proto\x12\bgenproto\"e\n" +
+	"\rcatalog.proto\x12\bgenproto\"{\n" +
 	"\aProduct\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x14\n" +
-	"\x05price\x18\x04 \x01(\x01R\x05price\"`\n" +
+	"\x05price\x18\x04 \x01(\x01R\x05price\x12\x14\n" +
+	"\x05image\x18\x05 \x01(\tR\x05image\"v\n" +
 	"\x12PostProductRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
 	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x14\n" +
-	"\x05price\x18\x03 \x01(\x01R\x05price\"B\n" +
+	"\x05price\x18\x03 \x01(\x01R\x05price\x12\x14\n" +
+	"\x05image\x18\x04 \x01(\tR\x05image\"B\n" +
 	"\x13PostProductResponse\x12+\n" +
 	"\aproduct\x18\x01 \x01(\v2\x11.genproto.ProductR\aproduct\"#\n" +
 	"\x11GetProductRequest\x12\x0e\n" +

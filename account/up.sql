@@ -2,5 +2,5 @@ CREATE TABLE IF NOT EXISTS accounts (
   id CHAR(27) PRIMARY KEY,
   name VARCHAR(24) NOT NULL,
   email VARCHAR(64) NOT NULL unique,
-  password VARCHAR(64) NOT NULL,
+  password VARCHAR(64) NOT NULL
 );

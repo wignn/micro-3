@@ -99,6 +99,7 @@ func (cl *Client) GetOrdersForAccount(c context.Context, accountID string) ([]mo
 				Name:        p.Name,
 				Description: p.Description,
 				Price:       p.Price,
+	
 			})
 		}
 		newOrder.Products = products

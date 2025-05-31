@@ -12,6 +12,8 @@ type Product {
   name: String!
   description: String!
   price: Float!
+  image: String!
+  status: String!
 }
 
 type Order {
@@ -19,6 +21,7 @@ type Order {
   createdAt: Time!
   totalPrice: Float!
   products: [OrderedProduct!]!
+  status: String!
 }
 
 type OrderedProduct {
@@ -44,6 +47,7 @@ input ProductInput {
   name: String!
   description: String!
   price: Float!
+  image: String!
 }
 
 input OrderProductInput {

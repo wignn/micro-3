@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"time"
-
 	"github.com/kelseyhightower/envconfig"
 	"github.com/tinrab/retry"
 	"github.com/wignn/micro-3/catalog/repository"

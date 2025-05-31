@@ -10,12 +10,14 @@ message Product {
     string name = 2;
     string description = 3;
     double price = 4;
+    string image = 5;
 }
 
 message PostProductRequest {
     string name = 1;
     string description = 2;
     double price = 3;
+    string image = 4;
 }
 
 message PostProductResponse {

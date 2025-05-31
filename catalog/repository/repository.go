@@ -27,11 +27,7 @@ type elasticRepository struct {
 	client *elastic.Client
 }
 
-type productDocument struct {
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Price       float64 `json:"price"`
-}
+
 
 func NewElasticRepository(url string) (CatalogRepository, error) {
 	client, err := elastic.NewClient(
@@ -51,10 +47,11 @@ func (r *elasticRepository) PutProduct(ctx context.Context, p *model.Product) er
 		Index("catalog").
 		Type("product").
 		Id(p.ID).
-		BodyJson(productDocument{
+		BodyJson(model.ProductDocument{
 			Name:        p.Name,
 			Description: p.Description,
 			Price:       p.Price,
+			Image:       p.Image,
 		}).
 		Do(ctx)
 	return err
@@ -72,15 +69,16 @@ func (r *elasticRepository) GetProductByID(c context.Context, id string) (*model
 	if !res.Found {
 		return nil, ErrNotFound
 	}
-	p := productDocument{}
+	p := model.ProductDocument{}
 	if err = json.Unmarshal(*res.Source, &p); err != nil {
 		return nil, err
 	}
 	return &model.Product{
-		ID:          id,
+		ID:          res.Id,
 		Name:        p.Name,
 		Description: p.Description,
 		Price:       p.Price,
+		Image:       p.Image,
 	}, nil
 }
 
@@ -97,13 +95,14 @@ func (r *elasticRepository) ListProducts(c context.Context, skip, take uint64) (
 	}
 	var products []*model.Product
 	for _, hit := range res.Hits.Hits {
-		p := productDocument{}
+		p := model.ProductDocument{}
 		if err = json.Unmarshal(*hit.Source, &p); err == nil {
 			products = append(products, &model.Product{
 				ID:          hit.Id,
 				Name:        p.Name,
 				Description: p.Description,
 				Price:       p.Price,
+				Image:       p.Image,
 			})
 		}
 	}
@@ -128,13 +127,14 @@ func (r *elasticRepository) ListProductsWithIDs(c context.Context, ids []string)
 	var products []*model.Product
 	for _, doc := range res.Docs {
 		if doc.Found {
-			p := productDocument{}
+			p := model.ProductDocument{}
 			if err = json.Unmarshal(*doc.Source, &p); err == nil {
 				products = append(products, &model.Product{
 					ID:          doc.Id,
 					Name:        p.Name,
 					Description: p.Description,
 					Price:       p.Price,
+					Image:       p.Image,
 				})
 			}
 		}
@@ -155,13 +155,14 @@ func (r *elasticRepository) SearchProducts(c context.Context, query string, skip
 	}
 	var products []*model.Product
 	for _, hit := range res.Hits.Hits {
-		p := productDocument{}
+		p := model.ProductDocument{}
 		if err = json.Unmarshal(*hit.Source, &p); err == nil {
 			products = append(products, &model.Product{
 				ID:          hit.Id,
 				Name:        p.Name,
 				Description: p.Description,
 				Price:       p.Price,
+				Image:       p.Image,
 			})
 		}
 	}

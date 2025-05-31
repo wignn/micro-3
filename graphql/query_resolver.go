@@ -24,6 +24,7 @@ func (r *queryResolver) Accounts(ctx context.Context, pagination *PaginationInpu
 		return []*Account{{
 			ID:   r.ID,
 			Name: r.Name,
+			Email: r.Email,
 		}}, nil
 	}
 
@@ -43,19 +44,20 @@ func (r *queryResolver) Accounts(ctx context.Context, pagination *PaginationInpu
 		account := &Account{
 			ID:   a.ID,
 			Name: a.Name,
+			Email: a.Email,
 		}
 		accounts = append(accounts, account)
 	}
 
 	return accounts, nil
 }
-func (r *queryResolver) Products(ctx context.Context, pagination *PaginationInput, query *string, id *string) ([]*Product, error) {
-	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+func (r *queryResolver) Products(c context.Context, pagination *PaginationInput, query *string, id *string) ([]*Product, error) {
+	c, cancel := context.WithTimeout(c, 3*time.Second)
 	defer cancel()
 
 	// Get single
 	if id != nil {
-		r, err := r.server.catalogClient.GetProduct(ctx, *id)
+		r, err := r.server.catalogClient.GetProduct(c, *id)
 		if err != nil {
 			log.Println(err)
 			return nil, err
@@ -65,6 +67,7 @@ func (r *queryResolver) Products(ctx context.Context, pagination *PaginationInpu
 			Name:        r.Name,
 			Description: r.Description,
 			Price:       r.Price,
+			Image: 	 r.Image,
 		}}, nil
 	}
 
@@ -77,7 +80,7 @@ func (r *queryResolver) Products(ctx context.Context, pagination *PaginationInpu
 	if query != nil {
 		q = *query
 	}
-	productList, err := r.server.catalogClient.GetProducts(ctx, skip, take, nil, q)
+	productList, err := r.server.catalogClient.GetProducts(c, skip, take, nil, q)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -91,6 +94,7 @@ func (r *queryResolver) Products(ctx context.Context, pagination *PaginationInpu
 				Name:        a.Name,
 				Description: a.Description,
 				Price:       a.Price,
+				Image: 	 a.Image,
 			},
 		)
 	}

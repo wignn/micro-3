@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"time"
-
 	"github.com/kelseyhightower/envconfig"
 	"github.com/tinrab/retry"
 	"github.com/wignn/micro-3/order/repository"
@@ -23,6 +22,7 @@ func main() {
 	if err := envconfig.Process("", &cfg); err != nil {
 		log.Fatal("Failed to process environment variables:", err)
 	}
+
 	var r repository.OrderRepository
 	retry.ForeverSleep(2*time.Second, func(_ int) (err error) {
 		r, err = repository.NewOrderPostgresRepository(cfg.DatabaseURL)
@@ -32,7 +32,9 @@ func main() {
 		return
 	})
 	defer r.Close()
-	log.Println("Listening on listening ")
+
 	s := service.NewOrderService(r)
+
+	log.Println("Order service listening on port", cfg.PORT)
 	log.Fatal(server.ListenGRPC(s, cfg.AccountURL, cfg.CatalogURL, cfg.PORT))
 }

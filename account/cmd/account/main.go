@@ -1,12 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
-
 	"github.com/kelseyhightower/envconfig"
 	"github.com/tinrab/retry"
+	"fmt"
 	"github.com/wignn/micro-3/account/repository"
 	"github.com/wignn/micro-3/account/server"
 	"github.com/wignn/micro-3/account/service"
@@ -23,7 +22,7 @@ func main() {
 	if err := envconfig.Process("", &cfg); err != nil {
 		log.Fatal("Failed to process environment variables:", err)
 	}
-	fmt.Println("Starting Account Service...", cfg)
+	fmt.Println("Starting Account Service...", cfg.PORT)
 
 	var r repository.AccountRepository
 
@@ -35,7 +34,6 @@ func main() {
 		}
 		return nil
 	})
-
 	defer r.Close()
 
 	log.Println("listening on port", cfg.PORT)

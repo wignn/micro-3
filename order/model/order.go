@@ -15,5 +15,6 @@ type OrderedProduct struct {
 	Name        string
 	Description string
 	Price       float64
+	Image       string
 	Quantity    uint32
 }

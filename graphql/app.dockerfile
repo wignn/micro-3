@@ -2,7 +2,7 @@ FROM golang:1.24-alpine3.21 AS build
 
 RUN apk --no-cache add gcc g++ make ca-certificates
 
-WORKDIR /go/src/github.com/akhilsharma90/go-graphql-microservice
+WORKDIR /go/src/github.com/wignn/grpc-graphql
 
 COPY go.mod go.sum ./
 COPY vendor vendor

@@ -75,7 +75,7 @@ func (r *postgresRepository) PutOrder(c context.Context, o *model.Order) (err er
 	}
 	stmt.Close()
 
-	return
+	return 
 }
 
 

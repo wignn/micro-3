@@ -30,7 +30,7 @@ func ListenGRPC(s service.CatalogService, port int) error {
 }
 
 func (s *grpcServer) PostProduct(c context.Context, r *genproto.PostProductRequest) (*genproto.PostProductResponse, error) {
-	p, err := s.service.PostProduct(c, r.Name, r.Description, r.Price)
+	p, err := s.service.PostProduct(c, r.Name, r.Description, r.Price, r.Image)
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -40,6 +40,7 @@ func (s *grpcServer) PostProduct(c context.Context, r *genproto.PostProductReque
 		Name:        p.Name,
 		Description: p.Description,
 		Price:       p.Price,
+		Image:       p.Image,
 	}}, nil
 }
 
@@ -55,6 +56,7 @@ func (s *grpcServer) GetProduct(c context.Context, r *genproto.GetProductRequest
 			Name:        p.Name,
 			Description: p.Description,
 			Price:       p.Price,
+			Image:       p.Image,
 		},
 	}, nil
 }
@@ -62,7 +64,7 @@ func (s *grpcServer) GetProduct(c context.Context, r *genproto.GetProductRequest
 func (s *grpcServer) GetProducts(c context.Context, r *genproto.GetProductsRequest) (*genproto.GetProductsResponse, error) {
 	var res []*model.Product
 	var err error
-	
+
 	if r.Query != "" {
 		res, err = s.service.SearchProducts(c, r.Query, r.Skip, r.Take)
 	} else if len(r.Ids) != 0 {
@@ -84,6 +86,7 @@ func (s *grpcServer) GetProducts(c context.Context, r *genproto.GetProductsReque
 				Name:        p.Name,
 				Description: p.Description,
 				Price:       p.Price,
+				Image:       p.Image,
 			},
 		)
 	}

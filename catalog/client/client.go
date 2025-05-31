@@ -2,7 +2,6 @@ package client
 
 import (
 	"context"
-
 	"github.com/wignn/micro-3/catalog/genproto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -28,11 +27,13 @@ func (cl *CatalogClient) Close() {
 }
 
 
-func (cl *CatalogClient) PostProduct(c context.Context, name, description string, price float64) (*genproto.Product, error) {
+func (cl *CatalogClient) PostProduct(c context.Context, name, description string, price float64, image string) (*genproto.Product, error) {
+
 	r, err := cl.service.PostProduct(
 		c,
-		&genproto.PostProductRequest{Name: name, Description: description, Price: price},
+		&genproto.PostProductRequest{Name: name, Description: description, Price: price, Image: image},
 	)
+
 	if err != nil {
 		return nil, err
 	}
@@ -69,6 +70,7 @@ func (cl *CatalogClient) GetProducts(c context.Context,skip, take uint64 ,ids []
 			Name:        p.Name,
 			Description: p.Description,
 			Price:       p.Price,
+			Image:       p.Image,
 		})
 	}
 
