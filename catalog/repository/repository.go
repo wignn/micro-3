@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	ErrNotFound = errors.New("Entity not found")
+	ErrNotFound = errors.New("entity not found")
 )
 
 type CatalogRepository interface {
@@ -21,6 +21,7 @@ type CatalogRepository interface {
 	ListProducts(c context.Context, skip uint64, take uint64) ([]*model.Product, error)
 	ListProductsWithIDs(ctx context.Context, ids []string) ([]*model.Product, error)
 	SearchProducts(c context.Context, query string, skip uint64, take uint64) ([]*model.Product, error)
+	DeletedProduct(c context.Context, id string) error
 }
 
 type elasticRepository struct {
@@ -167,4 +168,17 @@ func (r *elasticRepository) SearchProducts(c context.Context, query string, skip
 		}
 	}
 	return products, nil
+}
+
+func (r *elasticRepository) DeletedProduct(c context.Context, id string) error {
+	_, err := r.client.Delete().
+		Index("catalog").
+		Type("product").
+		Id(id).
+		Do(c)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
 }

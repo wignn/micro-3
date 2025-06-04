@@ -7,6 +7,7 @@ type Account {
   orders: [Order!]!
 }
 
+
 type Product {
   id: String!
   name: String!
@@ -60,10 +61,17 @@ input OrderInput {
   products: [OrderProductInput!]!
 }
 
+type DeleteProductResponse {
+  deletedId: ID!
+  success: Boolean!
+  message: String
+}
+
 type Mutation {
   createAccount(account: AccountInput!): Account
   createProduct(product: ProductInput!): Product
   createOrder(order: OrderInput!): Order
+  DeleteProduct(id: String!): DeleteProductResponse!
 }
 
 type Query {

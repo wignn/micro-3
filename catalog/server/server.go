@@ -92,3 +92,17 @@ func (s *grpcServer) GetProducts(c context.Context, r *genproto.GetProductsReque
 	}
 	return &genproto.GetProductsResponse{Products: products}, nil
 }
+
+func (s *grpcServer) DeleteProduct(c context.Context, r *genproto.DeleteProductRequest) (*genproto.DeleteProductResponse, error) {
+	err := s.service.DeleteProduct(c, r.Id)
+	if err != nil {
+		log.Println("failed to delete product:", err)
+		return nil, err
+	}
+
+	return &genproto.DeleteProductResponse{
+		Message: fmt.Sprintf("Product with ID %s deleted successfully", r.Id),
+		Success: true,
+		DeletedID: r.Id,
+	}, nil
+}

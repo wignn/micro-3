@@ -14,6 +14,7 @@ type CatalogService interface {
 	GetProducts(c context.Context, skip uint64, take uint64) ([]*model.Product, error)
 	GetProductsByIDs(c context.Context, ids []string) ([]*model.Product, error)
 	SearchProducts(c context.Context, query string, skip uint64, take uint64) ([]*model.Product, error)
+	DeleteProduct(c context.Context, id string) error
 }
 
 type catalogService struct {
@@ -59,4 +60,11 @@ func (s *catalogService) SearchProducts(c context.Context, query string, skip ui
 		take = 100
 	}
 	return s.repository.SearchProducts(c, query, skip, take)
+}
+
+func (s *catalogService) DeleteProduct(c context.Context, id string) error {
+	if id == "" {
+		return repository.ErrNotFound
+	}
+	return s.repository.DeletedProduct(c, id)
 }

@@ -76,3 +76,14 @@ func (cl *CatalogClient) GetProducts(c context.Context,skip, take uint64 ,ids []
 
 	return products, nil
 }
+
+func (cl *CatalogClient)DeleteProduct(c context.Context, id string) (*genproto.DeleteProductResponse, error) {
+	result, err := cl.service.DeleteProduct(
+		c,
+		&genproto.DeleteProductRequest{Id: id},
+	)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}

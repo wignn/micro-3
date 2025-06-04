@@ -82,14 +82,14 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, in OrderInput) (*Ord
 		prodDetail, err := r.server.catalogClient.GetProduct(ctx, productID)
 		if err != nil {
 			log.Printf("failed to get product %s: %v", productID, err)
-			continue 
+			continue
 		}
 		orderProducts = append(orderProducts, &OrderedProduct{
-			ID:   prodDetail.Id,
-			Name: prodDetail.Name,
+			ID:          prodDetail.Id,
+			Name:        prodDetail.Name,
 			Description: prodDetail.Description,
-			Price: 	 prodDetail.Price,
-			Quantity: int(p.Quantity),
+			Price:       prodDetail.Price,
+			Quantity:    int(p.Quantity),
 		})
 	}
 
@@ -99,4 +99,15 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, in OrderInput) (*Ord
 		TotalPrice: o.TotalPrice,
 		Products:   orderProducts,
 	}, nil
+}
+
+func (r *mutationResolver) DeleteProduct(c context.Context, id string) (*DeleteProductResponse, error) {
+	result, err := r.server.catalogClient.DeleteProduct(c, id)
+
+	if err != nil {
+		log.Printf("failed to delete product: %+v\n", err)
+		message := "Failed to delete product"
+		return &DeleteProductResponse{Success: false, Message: &message, DeletedID: result.DeletedID}, err
+	}
+	return &DeleteProductResponse{Success: result.Success, Message: &result.Message, DeletedID: result.DeletedID}, nil
 }

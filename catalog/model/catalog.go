@@ -7,6 +7,7 @@ type Product struct {
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
 	Image       string  `json:"image"`
+	Deleted     bool    `json:"deleted"` 
 }
 
 //elasticSearch uses a different structure for indexing documents
@@ -15,4 +16,6 @@ type ProductDocument struct {
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
 	Image       string  `json:"image"`
+	Deleted     bool    `json:"deleted"`
 }
+
