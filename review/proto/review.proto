@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package genproto;
+
+option go_package = "github.com/wignn/micro-3/checkout/genproto";
+
+
+message Checkout {
+    string id = 1;
+    string userId = 2;
+    repeated string productIds = 3;
+    double totalPrice = 4;
+    string image = 5;   
+}
+
+message PostCheckoutRequest {
+    string userId = 1;
+    repeated string productIds = 2;
+    double totalPrice = 3;
+    string image = 4;   
+}
+
+message PostCheckoutResponse {
+    Checkout checkout = 1;
+}
+
+message GetCheckoutRequest {
+    string id = 1;
+}
+
+message GetCheckoutResponse {
+    Checkout checkout = 1;
+}
+
+message GetCheckoutsRequest {
+    uint64 skip = 1;
+    uint64 take = 2;
+    repeated string ids = 3;
+    string query = 4;
+}
+
+message DeleteCheckoutRequest {
+    string id = 1;
+}   
+
+message GetCheckoutsResponse {
+    repeated Checkout checkouts = 1;
+}
+
+message DeleteCheckoutResponse {
+    string message = 1;
+    bool success = 2;
+    string deletedID = 3;
+}
+
+service CheckoutService {
+    rpc PostCheckout (PostCheckoutRequest) returns (PostCheckoutResponse);
+    rpc GetCheckout (GetCheckoutRequest) returns (GetCheckoutResponse);
+    rpc GetCheckouts (GetCheckoutsRequest) returns (GetCheckoutsResponse);
+    rpc DeleteCheckout (DeleteCheckoutRequest) returns (DeleteCheckoutResponse); 
+}
