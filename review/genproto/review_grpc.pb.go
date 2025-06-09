@@ -19,215 +19,253 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CheckoutService_PostCheckout_FullMethodName   = "/genproto.CheckoutService/PostCheckout"
-	CheckoutService_GetCheckout_FullMethodName    = "/genproto.CheckoutService/GetCheckout"
-	CheckoutService_GetCheckouts_FullMethodName   = "/genproto.CheckoutService/GetCheckouts"
-	CheckoutService_DeleteCheckout_FullMethodName = "/genproto.CheckoutService/DeleteCheckout"
+	ReviewService_PostReview_FullMethodName                = "/genproto.ReviewService/PostReview"
+	ReviewService_GetReview_FullMethodName                 = "/genproto.ReviewService/GetReview"
+	ReviewService_GetReviewsByProduct_FullMethodName       = "/genproto.ReviewService/GetReviewsByProduct"
+	ReviewService_GetReviewByProductAndUser_FullMethodName = "/genproto.ReviewService/GetReviewByProductAndUser"
+	ReviewService_GetReviewsByUser_FullMethodName          = "/genproto.ReviewService/GetReviewsByUser"
 )
 
-// CheckoutServiceClient is the client API for CheckoutService service.
+// ReviewServiceClient is the client API for ReviewService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type CheckoutServiceClient interface {
-	PostCheckout(ctx context.Context, in *PostCheckoutRequest, opts ...grpc.CallOption) (*PostCheckoutResponse, error)
-	GetCheckout(ctx context.Context, in *GetCheckoutRequest, opts ...grpc.CallOption) (*GetCheckoutResponse, error)
-	GetCheckouts(ctx context.Context, in *GetCheckoutsRequest, opts ...grpc.CallOption) (*GetCheckoutsResponse, error)
-	DeleteCheckout(ctx context.Context, in *DeleteCheckoutRequest, opts ...grpc.CallOption) (*DeleteCheckoutResponse, error)
+type ReviewServiceClient interface {
+	PostReview(ctx context.Context, in *PostReviewRequest, opts ...grpc.CallOption) (*ReviewResponse, error)
+	GetReview(ctx context.Context, in *ReviewIdRequest, opts ...grpc.CallOption) (*Review, error)
+	GetReviewsByProduct(ctx context.Context, in *ProductIdRequest, opts ...grpc.CallOption) (*ReviewListResponse, error)
+	GetReviewByProductAndUser(ctx context.Context, in *ProductUserRequest, opts ...grpc.CallOption) (*ReviewResponse, error)
+	GetReviewsByUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ReviewListResponse, error)
 }
 
-type checkoutServiceClient struct {
+type reviewServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewCheckoutServiceClient(cc grpc.ClientConnInterface) CheckoutServiceClient {
-	return &checkoutServiceClient{cc}
+func NewReviewServiceClient(cc grpc.ClientConnInterface) ReviewServiceClient {
+	return &reviewServiceClient{cc}
 }
 
-func (c *checkoutServiceClient) PostCheckout(ctx context.Context, in *PostCheckoutRequest, opts ...grpc.CallOption) (*PostCheckoutResponse, error) {
+func (c *reviewServiceClient) PostReview(ctx context.Context, in *PostReviewRequest, opts ...grpc.CallOption) (*ReviewResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PostCheckoutResponse)
-	err := c.cc.Invoke(ctx, CheckoutService_PostCheckout_FullMethodName, in, out, cOpts...)
+	out := new(ReviewResponse)
+	err := c.cc.Invoke(ctx, ReviewService_PostReview_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *checkoutServiceClient) GetCheckout(ctx context.Context, in *GetCheckoutRequest, opts ...grpc.CallOption) (*GetCheckoutResponse, error) {
+func (c *reviewServiceClient) GetReview(ctx context.Context, in *ReviewIdRequest, opts ...grpc.CallOption) (*Review, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetCheckoutResponse)
-	err := c.cc.Invoke(ctx, CheckoutService_GetCheckout_FullMethodName, in, out, cOpts...)
+	out := new(Review)
+	err := c.cc.Invoke(ctx, ReviewService_GetReview_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *checkoutServiceClient) GetCheckouts(ctx context.Context, in *GetCheckoutsRequest, opts ...grpc.CallOption) (*GetCheckoutsResponse, error) {
+func (c *reviewServiceClient) GetReviewsByProduct(ctx context.Context, in *ProductIdRequest, opts ...grpc.CallOption) (*ReviewListResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetCheckoutsResponse)
-	err := c.cc.Invoke(ctx, CheckoutService_GetCheckouts_FullMethodName, in, out, cOpts...)
+	out := new(ReviewListResponse)
+	err := c.cc.Invoke(ctx, ReviewService_GetReviewsByProduct_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *checkoutServiceClient) DeleteCheckout(ctx context.Context, in *DeleteCheckoutRequest, opts ...grpc.CallOption) (*DeleteCheckoutResponse, error) {
+func (c *reviewServiceClient) GetReviewByProductAndUser(ctx context.Context, in *ProductUserRequest, opts ...grpc.CallOption) (*ReviewResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteCheckoutResponse)
-	err := c.cc.Invoke(ctx, CheckoutService_DeleteCheckout_FullMethodName, in, out, cOpts...)
+	out := new(ReviewResponse)
+	err := c.cc.Invoke(ctx, ReviewService_GetReviewByProductAndUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// CheckoutServiceServer is the server API for CheckoutService service.
-// All implementations must embed UnimplementedCheckoutServiceServer
+func (c *reviewServiceClient) GetReviewsByUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ReviewListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ReviewListResponse)
+	err := c.cc.Invoke(ctx, ReviewService_GetReviewsByUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ReviewServiceServer is the server API for ReviewService service.
+// All implementations must embed UnimplementedReviewServiceServer
 // for forward compatibility.
-type CheckoutServiceServer interface {
-	PostCheckout(context.Context, *PostCheckoutRequest) (*PostCheckoutResponse, error)
-	GetCheckout(context.Context, *GetCheckoutRequest) (*GetCheckoutResponse, error)
-	GetCheckouts(context.Context, *GetCheckoutsRequest) (*GetCheckoutsResponse, error)
-	DeleteCheckout(context.Context, *DeleteCheckoutRequest) (*DeleteCheckoutResponse, error)
-	mustEmbedUnimplementedCheckoutServiceServer()
+type ReviewServiceServer interface {
+	PostReview(context.Context, *PostReviewRequest) (*ReviewResponse, error)
+	GetReview(context.Context, *ReviewIdRequest) (*Review, error)
+	GetReviewsByProduct(context.Context, *ProductIdRequest) (*ReviewListResponse, error)
+	GetReviewByProductAndUser(context.Context, *ProductUserRequest) (*ReviewResponse, error)
+	GetReviewsByUser(context.Context, *UserIdRequest) (*ReviewListResponse, error)
+	mustEmbedUnimplementedReviewServiceServer()
 }
 
-// UnimplementedCheckoutServiceServer must be embedded to have
+// UnimplementedReviewServiceServer must be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedCheckoutServiceServer struct{}
+type UnimplementedReviewServiceServer struct{}
 
-func (UnimplementedCheckoutServiceServer) PostCheckout(context.Context, *PostCheckoutRequest) (*PostCheckoutResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PostCheckout not implemented")
+func (UnimplementedReviewServiceServer) PostReview(context.Context, *PostReviewRequest) (*ReviewResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostReview not implemented")
 }
-func (UnimplementedCheckoutServiceServer) GetCheckout(context.Context, *GetCheckoutRequest) (*GetCheckoutResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCheckout not implemented")
+func (UnimplementedReviewServiceServer) GetReview(context.Context, *ReviewIdRequest) (*Review, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReview not implemented")
 }
-func (UnimplementedCheckoutServiceServer) GetCheckouts(context.Context, *GetCheckoutsRequest) (*GetCheckoutsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetCheckouts not implemented")
+func (UnimplementedReviewServiceServer) GetReviewsByProduct(context.Context, *ProductIdRequest) (*ReviewListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReviewsByProduct not implemented")
 }
-func (UnimplementedCheckoutServiceServer) DeleteCheckout(context.Context, *DeleteCheckoutRequest) (*DeleteCheckoutResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteCheckout not implemented")
+func (UnimplementedReviewServiceServer) GetReviewByProductAndUser(context.Context, *ProductUserRequest) (*ReviewResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReviewByProductAndUser not implemented")
 }
-func (UnimplementedCheckoutServiceServer) mustEmbedUnimplementedCheckoutServiceServer() {}
-func (UnimplementedCheckoutServiceServer) testEmbeddedByValue()                         {}
+func (UnimplementedReviewServiceServer) GetReviewsByUser(context.Context, *UserIdRequest) (*ReviewListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReviewsByUser not implemented")
+}
+func (UnimplementedReviewServiceServer) mustEmbedUnimplementedReviewServiceServer() {}
+func (UnimplementedReviewServiceServer) testEmbeddedByValue()                       {}
 
-// UnsafeCheckoutServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to CheckoutServiceServer will
+// UnsafeReviewServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ReviewServiceServer will
 // result in compilation errors.
-type UnsafeCheckoutServiceServer interface {
-	mustEmbedUnimplementedCheckoutServiceServer()
+type UnsafeReviewServiceServer interface {
+	mustEmbedUnimplementedReviewServiceServer()
 }
 
-func RegisterCheckoutServiceServer(s grpc.ServiceRegistrar, srv CheckoutServiceServer) {
-	// If the following call pancis, it indicates UnimplementedCheckoutServiceServer was
+func RegisterReviewServiceServer(s grpc.ServiceRegistrar, srv ReviewServiceServer) {
+	// If the following call pancis, it indicates UnimplementedReviewServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&CheckoutService_ServiceDesc, srv)
+	s.RegisterService(&ReviewService_ServiceDesc, srv)
 }
 
-func _CheckoutService_PostCheckout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PostCheckoutRequest)
+func _ReviewService_PostReview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostReviewRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CheckoutServiceServer).PostCheckout(ctx, in)
+		return srv.(ReviewServiceServer).PostReview(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CheckoutService_PostCheckout_FullMethodName,
+		FullMethod: ReviewService_PostReview_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CheckoutServiceServer).PostCheckout(ctx, req.(*PostCheckoutRequest))
+		return srv.(ReviewServiceServer).PostReview(ctx, req.(*PostReviewRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CheckoutService_GetCheckout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCheckoutRequest)
+func _ReviewService_GetReview_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReviewIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CheckoutServiceServer).GetCheckout(ctx, in)
+		return srv.(ReviewServiceServer).GetReview(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CheckoutService_GetCheckout_FullMethodName,
+		FullMethod: ReviewService_GetReview_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CheckoutServiceServer).GetCheckout(ctx, req.(*GetCheckoutRequest))
+		return srv.(ReviewServiceServer).GetReview(ctx, req.(*ReviewIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CheckoutService_GetCheckouts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCheckoutsRequest)
+func _ReviewService_GetReviewsByProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CheckoutServiceServer).GetCheckouts(ctx, in)
+		return srv.(ReviewServiceServer).GetReviewsByProduct(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CheckoutService_GetCheckouts_FullMethodName,
+		FullMethod: ReviewService_GetReviewsByProduct_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CheckoutServiceServer).GetCheckouts(ctx, req.(*GetCheckoutsRequest))
+		return srv.(ReviewServiceServer).GetReviewsByProduct(ctx, req.(*ProductIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _CheckoutService_DeleteCheckout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteCheckoutRequest)
+func _ReviewService_GetReviewByProductAndUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ProductUserRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(CheckoutServiceServer).DeleteCheckout(ctx, in)
+		return srv.(ReviewServiceServer).GetReviewByProductAndUser(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: CheckoutService_DeleteCheckout_FullMethodName,
+		FullMethod: ReviewService_GetReviewByProductAndUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CheckoutServiceServer).DeleteCheckout(ctx, req.(*DeleteCheckoutRequest))
+		return srv.(ReviewServiceServer).GetReviewByProductAndUser(ctx, req.(*ProductUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// CheckoutService_ServiceDesc is the grpc.ServiceDesc for CheckoutService service.
+func _ReviewService_GetReviewsByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ReviewServiceServer).GetReviewsByUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ReviewService_GetReviewsByUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ReviewServiceServer).GetReviewsByUser(ctx, req.(*UserIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ReviewService_ServiceDesc is the grpc.ServiceDesc for ReviewService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var CheckoutService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "genproto.CheckoutService",
-	HandlerType: (*CheckoutServiceServer)(nil),
+var ReviewService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "genproto.ReviewService",
+	HandlerType: (*ReviewServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "PostCheckout",
-			Handler:    _CheckoutService_PostCheckout_Handler,
+			MethodName: "PostReview",
+			Handler:    _ReviewService_PostReview_Handler,
 		},
 		{
-			MethodName: "GetCheckout",
-			Handler:    _CheckoutService_GetCheckout_Handler,
+			MethodName: "GetReview",
+			Handler:    _ReviewService_GetReview_Handler,
 		},
 		{
-			MethodName: "GetCheckouts",
-			Handler:    _CheckoutService_GetCheckouts_Handler,
+			MethodName: "GetReviewsByProduct",
+			Handler:    _ReviewService_GetReviewsByProduct_Handler,
 		},
 		{
-			MethodName: "DeleteCheckout",
-			Handler:    _CheckoutService_DeleteCheckout_Handler,
+			MethodName: "GetReviewByProductAndUser",
+			Handler:    _ReviewService_GetReviewByProductAndUser_Handler,
+		},
+		{
+			MethodName: "GetReviewsByUser",
+			Handler:    _ReviewService_GetReviewsByUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

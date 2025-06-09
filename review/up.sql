@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS reviews (
+  id CHAR(27) PRIMARY KEY,
+  account_id CHAR(27) NOT NULL,
+  product_id CHAR(27) NOT NULL,
+  rating INT CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+);

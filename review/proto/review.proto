@@ -2,60 +2,58 @@ syntax = "proto3";
 
 package genproto;
 
-option go_package = "github.com/wignn/micro-3/checkout/genproto";
+option go_package = "github.com/wignn/micro-3/review/genproto";
 
-
-message Checkout {
-    string id = 1;
-    string userId = 2;
-    repeated string productIds = 3;
-    double totalPrice = 4;
-    string image = 5;   
+message Review {
+  string id = 1;
+  string product_id = 2;
+  string user_id = 3;
+  string content = 4;
+  int32 rating = 5;
+  bytes created_at = 6;
+  bytes updated_at = 7;
 }
 
-message PostCheckoutRequest {
-    string userId = 1;
-    repeated string productIds = 2;
-    double totalPrice = 3;
-    string image = 4;   
+message ReviewIdRequest {
+  string id = 1;
 }
 
-message PostCheckoutResponse {
-    Checkout checkout = 1;
+message ProductIdRequest {
+  string product_id = 1;
+  uint64 skip = 2;
+  uint64 take = 3;
 }
 
-message GetCheckoutRequest {
-    string id = 1;
+message UserIdRequest {
+  string user_id = 1;
+  uint64 skip = 2;
+  uint64 take = 3;
 }
 
-message GetCheckoutResponse {
-    Checkout checkout = 1;
+message ProductUserRequest {
+  string product_id = 1;
+  string user_id = 2;
 }
 
-message GetCheckoutsRequest {
-    uint64 skip = 1;
-    uint64 take = 2;
-    repeated string ids = 3;
-    string query = 4;
+message PostReviewRequest {
+  string product_id = 1;
+  string user_id = 2;
+  string content = 3;
+  int32 rating = 4;
 }
 
-message DeleteCheckoutRequest {
-    string id = 1;
-}   
-
-message GetCheckoutsResponse {
-    repeated Checkout checkouts = 1;
+message ReviewResponse {
+  Review review = 1;
 }
 
-message DeleteCheckoutResponse {
-    string message = 1;
-    bool success = 2;
-    string deletedID = 3;
+message ReviewListResponse {
+  repeated Review reviews = 1;
 }
 
-service CheckoutService {
-    rpc PostCheckout (PostCheckoutRequest) returns (PostCheckoutResponse);
-    rpc GetCheckout (GetCheckoutRequest) returns (GetCheckoutResponse);
-    rpc GetCheckouts (GetCheckoutsRequest) returns (GetCheckoutsResponse);
-    rpc DeleteCheckout (DeleteCheckoutRequest) returns (DeleteCheckoutResponse); 
+service ReviewService {
+  rpc PostReview(PostReviewRequest) returns (ReviewResponse);
+  rpc GetReview(ReviewIdRequest) returns (Review);
+  rpc GetReviewsByProduct(ProductIdRequest) returns (ReviewListResponse);
+  rpc GetReviewByProductAndUser(ProductUserRequest) returns (ReviewResponse);
+  rpc GetReviewsByUser(UserIdRequest) returns (ReviewListResponse);
 }
