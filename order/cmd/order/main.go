@@ -33,8 +33,9 @@ func main() {
 	})
 	defer r.Close()
 
-	s := service.NewOrderService(r)
+	
 
-	log.Println("Order service listening on port", cfg.PORT)
+	log.Println("listening on port", cfg.PORT)
+	s := service.NewOrderService(r)
 	log.Fatal(server.ListenGRPC(s, cfg.AccountURL, cfg.CatalogURL, cfg.PORT))
 }

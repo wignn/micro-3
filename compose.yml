@@ -34,6 +34,17 @@ services:
       PORT: 8080
     restart: on-failure
 
+  review:
+    build:
+      context: .
+      dockerfile: ./review/app.dockerfile
+    depends_on:
+      - review_db
+    environment:
+      DATABASE_URL: postgres://wignn:123456@review_db/review?sslmode=disable
+      PORT: 8080
+    restart: on-failure
+
   graphql:
     build:
       context: .
@@ -43,10 +54,13 @@ services:
     depends_on:
       - account
       - catalog
+      - order
+      - review
     environment:
       ACCOUNT_SERVICE_URL: account:8080
       CATALOG_SERVICE_URL: catalog:8080
       ORDER_SERVICE_URL: order:8080
+      REVIEW_SERVICE_URL: review:8080
     restart: on-failure
 
   account_db:
@@ -81,6 +95,17 @@ services:
       - order_db_data:/var/lib/postgresql/data  
     restart: unless-stopped
 
+  review_db:
+    build: 
+      context: ./review
+      dockerfile: ./db.dockerfile
+    environment:
+      POSTGRES_DB: review
+      POSTGRES_USER: wignn
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - review_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
   
 
 volumes:
@@ -88,3 +113,4 @@ volumes:
   catalog_db_data:
   order_db_data:
   clickhouse_data:
+  review_db_data:

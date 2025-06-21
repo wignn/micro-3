@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net"
-
 	"github.com/wignn/micro-3/review/genproto"
 	"github.com/wignn/micro-3/review/service"
 	"google.golang.org/grpc"
@@ -28,96 +27,68 @@ func ListenGRPC(s service.ReviewService, port int) error {
 }
 
 func (s *grpcServer) PostReview(ctx context.Context, req *genproto.PostReviewRequest) (*genproto.ReviewResponse, error) {
-	rev, err := s.service.PutReview(ctx, req.ProductId, req.UserId, int(req.Rating), req.Content)
+	rev, err := s.service.PutReview(ctx, req.ProductId, req.AccountId, int(req.Rating), req.Content)
 	if err != nil {
 		return nil, err
 	}
 	return &genproto.ReviewResponse{Review: &genproto.Review{
 		Id:        rev.ID,
 		ProductId: rev.ProductID,
-		UserId:    rev.UserID,
+		AccountId: rev.AccountID,
 		Rating:    int32(rev.Rating),
-		Content:   rev.Comment,
-		CreatedAt: []byte(rev.CreatedAt),
-		UpdatedAt: []byte(rev.UpdatedAt),
+		Content:   rev.Content,
 	},
 	}, nil
 }
 
 func (s *grpcServer) GetReview(ctx context.Context, req *genproto.ReviewIdRequest) (*genproto.Review, error) {
 	rev, err := s.service.GetReviewById(ctx, req.Id)
+
 	if err != nil {
 		return nil, err
 	}
+
 	if rev == nil {
 		return nil, fmt.Errorf("review not found")
 	}
+
+	createdAtBytes, _ := rev.CreatedAt.MarshalBinary()
+
 	return &genproto.Review{
 		Id:        rev.ID,
 		ProductId: rev.ProductID,
-		UserId:    rev.UserID,
+		AccountId: rev.AccountID,
 		Rating:    int32(rev.Rating),
-		Content:   rev.Comment,
-		CreatedAt: []byte(rev.CreatedAt),
-		UpdatedAt: []byte(rev.UpdatedAt),
+		Content:   rev.Content,
+		CreatedAt: createdAtBytes,
 	}, nil
 }
 
-func (s *grpcServer) GetReviewsByProduct(ctx context.Context, req *genproto.ProductIdRequest) (*genproto.ReviewListResponse, error) {
-	revs, err := s.service.ListReviewsByProduct(ctx, req.ProductId, req.Skip, req.Take)
+func (s *grpcServer) GetReviewByProductAndUser(
+	ctx context.Context,
+	req *genproto.ProductIdRequest,
+) (*genproto.ReviewListResponse, error) {
+
+	rev, err := s.service.GetReviewByProductAndUser(ctx, req.Id, req.Skip, req.Take)
 	if err != nil {
 		return nil, err
 	}
-	var protoRevs []*genproto.Review
-	for _, rev := range revs {
-		protoRevs = append(protoRevs, &genproto.Review{
-			Id:        rev.ID,
-			ProductId: rev.ProductID,
-			UserId:    rev.UserID,
-			Rating:    int32(rev.Rating),
-			Content:   rev.Comment,
-			CreatedAt: []byte(rev.CreatedAt),
-			UpdatedAt: []byte(rev.UpdatedAt),
+	if len(rev) == 0 {
+		return nil, fmt.Errorf("no reviews found")
+	}
+
+	var reviews []*genproto.Review
+	for _, r := range rev {
+		createdAtBytes, _ := r.CreatedAt.MarshalBinary()
+
+		reviews = append(reviews, &genproto.Review{
+			Id:        r.ID,
+			ProductId: r.ProductID,
+			AccountId: r.AccountID,
+			Rating:    int32(r.Rating),
+			Content:   r.Content,
+			CreatedAt: createdAtBytes,
 		})
 	}
-	return &genproto.ReviewListResponse{Reviews: protoRevs}, nil
-}
-
-func (s *grpcServer) GetReviewsByUser(ctx context.Context, req *genproto.UserIdRequest) (*genproto.ReviewListResponse, error) {
-	revs, err := s.service.ListReviewsByUser(ctx, req.UserId, req.Skip, req.Take)
-	if err != nil {
-		return nil, err
-	}
-	var protoRevs []*genproto.Review
-	for _, rev := range revs {
-		protoRevs = append(protoRevs, &genproto.Review{
-			Id:        rev.ID,
-			ProductId: rev.ProductID,
-			UserId:    rev.UserID,
-			Rating:    int32(rev.Rating),
-			Content:   rev.Comment,
-			CreatedAt: []byte(rev.CreatedAt),
-			UpdatedAt: []byte(rev.UpdatedAt),
-		})
-	}
-	return &genproto.ReviewListResponse{Reviews: protoRevs}, nil
-}
-
-func (s *grpcServer) GetReviewByProductAndUser(ctx context.Context, req *genproto.ProductUserRequest) (*genproto.ReviewResponse, error) {
-	rev, err := s.service.GetReviewByProductAndUser(ctx, req.ProductId, req.UserId)
-	if err != nil {
-		return nil, err
-	}
-	if rev == nil {
-		return nil, fmt.Errorf("review not found")
-	}
-	return &genproto.ReviewResponse{Review: &genproto.Review{
-		Id:        rev.ID,
-		ProductId: rev.ProductID,
-		UserId:    rev.UserID,
-		Rating:    int32(rev.Rating),
-		Content:   rev.Comment,
-		CreatedAt: []byte(rev.CreatedAt),
-		UpdatedAt: []byte(rev.UpdatedAt),
-	}}, nil
+	return &genproto.ReviewListResponse{Reviews: reviews}, nil
 }

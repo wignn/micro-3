@@ -101,6 +101,30 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, in OrderInput) (*Ord
 	}, nil
 }
 
+func (r *mutationResolver) CreateReview(ctx context.Context, in ReviewInput) (*Review, error) {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	if in.Rating < 1 || in.Rating > 5 {
+		return nil, ErrInvalidParameter
+	}
+	review, err := r.server.reviewClient.PostReview(ctx, in.ProductID, in.AccountID, *in.Content, int32(in.Rating))
+
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return &Review{
+		ID:        review.ID,
+		ProductID: review.ProductID,
+		AccountID: review.AccountID,
+		Rating:    int(review.Rating),
+		Content:   &review.Content,
+		CreatedAt: review.CreatedAt,
+	}, nil
+}
+
 func (r *mutationResolver) DeleteProduct(c context.Context, id string) (*DeleteProductResponse, error) {
 	result, err := r.server.catalogClient.DeleteProduct(c, id)
 

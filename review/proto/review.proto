@@ -6,12 +6,12 @@ option go_package = "github.com/wignn/micro-3/review/genproto";
 
 message Review {
   string id = 1;
-  string product_id = 2;
-  string user_id = 3;
+  string productId= 2;
+  string accountId = 3;
   string content = 4;
   int32 rating = 5;
-  bytes created_at = 6;
-  bytes updated_at = 7;
+  bytes createdAt = 6;
+
 }
 
 message ReviewIdRequest {
@@ -19,25 +19,14 @@ message ReviewIdRequest {
 }
 
 message ProductIdRequest {
-  string product_id = 1;
+  string id = 1;
   uint64 skip = 2;
   uint64 take = 3;
-}
-
-message UserIdRequest {
-  string user_id = 1;
-  uint64 skip = 2;
-  uint64 take = 3;
-}
-
-message ProductUserRequest {
-  string product_id = 1;
-  string user_id = 2;
 }
 
 message PostReviewRequest {
-  string product_id = 1;
-  string user_id = 2;
+  string productId = 1;
+  string accountId = 2;
   string content = 3;
   int32 rating = 4;
 }
@@ -53,7 +42,5 @@ message ReviewListResponse {
 service ReviewService {
   rpc PostReview(PostReviewRequest) returns (ReviewResponse);
   rpc GetReview(ReviewIdRequest) returns (Review);
-  rpc GetReviewsByProduct(ProductIdRequest) returns (ReviewListResponse);
-  rpc GetReviewByProductAndUser(ProductUserRequest) returns (ReviewResponse);
-  rpc GetReviewsByUser(UserIdRequest) returns (ReviewListResponse);
+  rpc GetReviewByProductAndUser(ProductIdRequest) returns (ReviewListResponse);
 }

@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
-
+	_ "github.com/lib/pq"
 	"github.com/wignn/micro-3/review/model"
 )
 
@@ -11,9 +11,7 @@ type ReviewRepository interface {
 	Close()
 	PutReview(c context.Context, r *model.Review) error
 	GetReviewById(c context.Context, id string) (*model.Review, error)
-	ListReviewsByProduct(c context.Context, productId string, skip uint64, take uint64) ([]*model.Review, error)
-	ListReviewsByUser(c context.Context, userId string, skip uint64, take uint64) ([]*model.Review, error)
-	GetReviewByProductAndUser(c context.Context, productId, userId string) (*model.Review, error)
+	GetReviewByProductAndUser(c context.Context, id string, skip, take uint64) ([]*model.Review, error)
 }
 
 type PostgresRepository struct {
@@ -22,7 +20,7 @@ type PostgresRepository struct {
 
 func NewPostgresRepository(url string) (*PostgresRepository, error) {
 	db, err := sql.Open("postgres", url)
-	if err != nil {  
+	if err != nil {
 		return nil, err
 	}
 
@@ -33,7 +31,6 @@ func NewPostgresRepository(url string) (*PostgresRepository, error) {
 	return &PostgresRepository{db}, nil
 }
 
-
 func (r *PostgresRepository) Close() {
 	if err := r.db.Close(); err != nil {
 		panic(err)
@@ -41,19 +38,18 @@ func (r *PostgresRepository) Close() {
 }
 
 func (r *PostgresRepository) PutReview(c context.Context, rev *model.Review) error {
-	_, err := r.db.ExecContext(c, "INSERT INTO reviews (id, product_id, user_id, rating, comment, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-		rev.ID, rev.ProductID, rev.UserID, rev.Rating, rev.Comment, rev.CreatedAt, rev.UpdatedAt)
+	_, err := r.db.ExecContext(c, "INSERT INTO reviews (id, product_id, account_id, rating, content, created_at) VALUES ($1, $2, $3, $4, $5, $6)",
+		rev.ID, rev.ProductID, rev.AccountID, rev.Rating, rev.Content, rev.CreatedAt)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-
 func (r *PostgresRepository) GetReviewById(c context.Context, id string) (*model.Review, error) {
-	row := r.db.QueryRowContext(c, "SELECT id, product_id, user_id, rating, comment, created_at, updated_at FROM reviews WHERE id = $1", id)
+	row := r.db.QueryRowContext(c, "SELECT id, product_id, account_id, rating, content, created_at FROM reviews WHERE id = $1", id)
 	rev := &model.Review{}
-	if err := row.Scan(&rev.ID, &rev.ProductID, &rev.UserID, &rev.Rating, &rev.Comment, &rev.CreatedAt, &rev.UpdatedAt); err != nil {
+	if err := row.Scan(&rev.ID, &rev.ProductID, &rev.AccountID, &rev.Rating, &rev.Content, &rev.CreatedAt); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
 		}
@@ -62,8 +58,14 @@ func (r *PostgresRepository) GetReviewById(c context.Context, id string) (*model
 	return rev, nil
 }
 
-func (r *PostgresRepository) ListReviewsByProduct(c context.Context, productId string, skip uint64, take uint64) ([]*model.Review, error) {
-	rows, err := r.db.QueryContext(c, "SELECT id, product_id, user_id, rating, comment, created_at, updated_at FROM reviews WHERE product_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3", productId, take, skip)
+func (r *PostgresRepository) GetReviewByProductAndUser(c context.Context, id string, skip, take uint64) ([]*model.Review, error) {
+
+	rows, err := r.db.QueryContext(c, `
+		SELECT id, product_id, account_id, rating, content, created_at
+		FROM reviews
+		WHERE product_id = $1 OR account_id = $2
+		LIMIT $3 OFFSET $4
+	`, id, id, take, skip)
 	if err != nil {
 		return nil, err
 	}
@@ -71,52 +73,12 @@ func (r *PostgresRepository) ListReviewsByProduct(c context.Context, productId s
 
 	var reviews []*model.Review
 	for rows.Next() {
-		rev := &model.Review{}
-		if err := rows.Scan(&rev.ID, &rev.ProductID, &rev.UserID, &rev.Rating, &rev.Comment, &rev.CreatedAt, &rev.UpdatedAt); err != nil {
+		review := &model.Review{}
+		if err := rows.Scan(&review.ID, &review.ProductID, &review.AccountID, &review.Rating, &review.Content, &review.CreatedAt); err != nil {
 			return nil, err
 		}
-		reviews = append(reviews, rev)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
+		reviews = append(reviews, review)
 	}
 
 	return reviews, nil
-}
-
-func (r *PostgresRepository) ListReviewsByUser (c context.Context, userId string, skip uint64, take uint64) ([]*model.Review, error) {
-	rows, err := r.db.QueryContext(c, "SELECT id, product_id, user_id, rating, comment, created_at, updated_at FROM reviews WHERE user_id = $1 ORDER BY created_at DESC LIMIT $2 OFFSET $3", userId, take, skip)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var reviews []*model.Review
-	for rows.Next() {
-		rev := &model.Review{}
-		if err := rows.Scan(&rev.ID, &rev.ProductID, &rev.UserID, &rev.Rating, &rev.Comment, &rev.CreatedAt, &rev.UpdatedAt); err != nil {
-			return nil, err
-		}
-		reviews = append(reviews, rev)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return reviews, nil
-}
-
-
-func (r *PostgresRepository) GetReviewByProductAndUser(c context.Context, productId, userId string) (*model.Review, error) {
-	row := r.db.QueryRowContext(c, "SELECT id, product_id, user_id, rating, comment, created_at, updated_at FROM reviews WHERE product_id = $1 AND user_id = $2", productId, userId)
-	rev := &model.Review{}
-	if err := row.Scan(&rev.ID, &rev.ProductID, &rev.UserID, &rev.Rating, &rev.Comment, &rev.CreatedAt, &rev.UpdatedAt); err != nil {
-		if err == sql.ErrNoRows {
-			return nil, nil
-		}
-		return nil, err
-	}
-	return rev, nil
 }

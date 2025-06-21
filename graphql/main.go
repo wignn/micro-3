@@ -12,6 +12,7 @@ type AppConfig struct {
 	AccountURL string `envconfig:"ACCOUNT_SERVICE_URL"`
 	CatalogURL string `envconfig:"CATALOG_SERVICE_URL"`
 	OrderURL   string `envconfig:"ORDER_SERVICE_URL"`
+	ReviewURL  string `envconfig:"REVIEW_SERVICE_URL"`
 }
 
 func main() {
@@ -22,8 +23,7 @@ func main() {
 		log.Fatalf("failed to process env config: %v", err)
 	}
 
-	s, err := NewGraphQLServer(cfg.AccountURL, cfg.CatalogURL, cfg.OrderURL)
-	
+	s, err := NewGraphQLServer(cfg.AccountURL, cfg.CatalogURL, cfg.OrderURL, cfg.ReviewURL)
 	if err != nil {
 		log.Fatalf("failed to create GraphQL server: %v", err)
 	}

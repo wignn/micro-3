@@ -14,7 +14,15 @@ type Product {
   description: String!
   price: Float!
   image: String!
-  status: String!
+}
+
+type Review {
+  id: String!
+  productId: String!
+  accountId: String! 
+  content: String
+  rating: Int!
+  createdAt: Time!
 }
 
 type Order {
@@ -51,6 +59,13 @@ input ProductInput {
   image: String!
 }
 
+input ReviewInput {
+  productId: String!
+  accountId: String!
+  content: String
+  rating: Int!  
+}
+
 input OrderProductInput {
   id: String!
   quantity: Int!
@@ -70,6 +85,7 @@ type DeleteProductResponse {
 type Mutation {
   createAccount(account: AccountInput!): Account
   createProduct(product: ProductInput!): Product
+  createReview(review: ReviewInput!): Review
   createOrder(order: OrderInput!): Order
   DeleteProduct(id: String!): DeleteProductResponse!
 }
@@ -77,4 +93,5 @@ type Mutation {
 type Query {
   accounts(pagination: PaginationInput, id: String): [Account!]!
   products(pagination: PaginationInput, query: String, id: String): [Product!]!
+  reviews(pagination: PaginationInput, id: String): [Review!]!
 }

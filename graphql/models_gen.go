@@ -58,7 +58,6 @@ type Product struct {
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
 	Image       string  `json:"image"`
-	Status      string  `json:"status"`
 }
 
 type ProductInput struct {
@@ -69,4 +68,20 @@ type ProductInput struct {
 }
 
 type Query struct {
+}
+
+type Review struct {
+	ID        string    `json:"id"`
+	ProductID string    `json:"productId"`
+	AccountID string    `json:"accountId"`
+	Content   *string   `json:"content,omitempty"`
+	Rating    int       `json:"rating"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+type ReviewInput struct {
+	ProductID string  `json:"productId"`
+	AccountID string  `json:"accountId"`
+	Content   *string `json:"content,omitempty"`
+	Rating    int     `json:"rating"`
 }

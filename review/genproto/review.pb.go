@@ -24,12 +24,11 @@ const (
 type Review struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	ProductId     string                 `protobuf:"bytes,2,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
-	UserId        string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ProductId     string                 `protobuf:"bytes,2,opt,name=productId,proto3" json:"productId,omitempty"`
+	AccountId     string                 `protobuf:"bytes,3,opt,name=accountId,proto3" json:"accountId,omitempty"`
 	Content       string                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
 	Rating        int32                  `protobuf:"varint,5,opt,name=rating,proto3" json:"rating,omitempty"`
-	CreatedAt     []byte                 `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     []byte                 `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	CreatedAt     []byte                 `protobuf:"bytes,6,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -78,9 +77,9 @@ func (x *Review) GetProductId() string {
 	return ""
 }
 
-func (x *Review) GetUserId() string {
+func (x *Review) GetAccountId() string {
 	if x != nil {
-		return x.UserId
+		return x.AccountId
 	}
 	return ""
 }
@@ -102,13 +101,6 @@ func (x *Review) GetRating() int32 {
 func (x *Review) GetCreatedAt() []byte {
 	if x != nil {
 		return x.CreatedAt
-	}
-	return nil
-}
-
-func (x *Review) GetUpdatedAt() []byte {
-	if x != nil {
-		return x.UpdatedAt
 	}
 	return nil
 }
@@ -159,7 +151,7 @@ func (x *ReviewIdRequest) GetId() string {
 
 type ProductIdRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProductId     string                 `protobuf:"bytes,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Skip          uint64                 `protobuf:"varint,2,opt,name=skip,proto3" json:"skip,omitempty"`
 	Take          uint64                 `protobuf:"varint,3,opt,name=take,proto3" json:"take,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -196,9 +188,9 @@ func (*ProductIdRequest) Descriptor() ([]byte, []int) {
 	return file_review_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ProductIdRequest) GetProductId() string {
+func (x *ProductIdRequest) GetId() string {
 	if x != nil {
-		return x.ProductId
+		return x.Id
 	}
 	return ""
 }
@@ -217,122 +209,10 @@ func (x *ProductIdRequest) GetTake() uint64 {
 	return 0
 }
 
-type UserIdRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Skip          uint64                 `protobuf:"varint,2,opt,name=skip,proto3" json:"skip,omitempty"`
-	Take          uint64                 `protobuf:"varint,3,opt,name=take,proto3" json:"take,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UserIdRequest) Reset() {
-	*x = UserIdRequest{}
-	mi := &file_review_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UserIdRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UserIdRequest) ProtoMessage() {}
-
-func (x *UserIdRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_review_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UserIdRequest.ProtoReflect.Descriptor instead.
-func (*UserIdRequest) Descriptor() ([]byte, []int) {
-	return file_review_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *UserIdRequest) GetUserId() string {
-	if x != nil {
-		return x.UserId
-	}
-	return ""
-}
-
-func (x *UserIdRequest) GetSkip() uint64 {
-	if x != nil {
-		return x.Skip
-	}
-	return 0
-}
-
-func (x *UserIdRequest) GetTake() uint64 {
-	if x != nil {
-		return x.Take
-	}
-	return 0
-}
-
-type ProductUserRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProductId     string                 `protobuf:"bytes,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
-	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ProductUserRequest) Reset() {
-	*x = ProductUserRequest{}
-	mi := &file_review_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ProductUserRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ProductUserRequest) ProtoMessage() {}
-
-func (x *ProductUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_review_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ProductUserRequest.ProtoReflect.Descriptor instead.
-func (*ProductUserRequest) Descriptor() ([]byte, []int) {
-	return file_review_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *ProductUserRequest) GetProductId() string {
-	if x != nil {
-		return x.ProductId
-	}
-	return ""
-}
-
-func (x *ProductUserRequest) GetUserId() string {
-	if x != nil {
-		return x.UserId
-	}
-	return ""
-}
-
 type PostReviewRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ProductId     string                 `protobuf:"bytes,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`
-	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ProductId     string                 `protobuf:"bytes,1,opt,name=productId,proto3" json:"productId,omitempty"`
+	AccountId     string                 `protobuf:"bytes,2,opt,name=accountId,proto3" json:"accountId,omitempty"`
 	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	Rating        int32                  `protobuf:"varint,4,opt,name=rating,proto3" json:"rating,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -341,7 +221,7 @@ type PostReviewRequest struct {
 
 func (x *PostReviewRequest) Reset() {
 	*x = PostReviewRequest{}
-	mi := &file_review_proto_msgTypes[5]
+	mi := &file_review_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -353,7 +233,7 @@ func (x *PostReviewRequest) String() string {
 func (*PostReviewRequest) ProtoMessage() {}
 
 func (x *PostReviewRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_review_proto_msgTypes[5]
+	mi := &file_review_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -366,7 +246,7 @@ func (x *PostReviewRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostReviewRequest.ProtoReflect.Descriptor instead.
 func (*PostReviewRequest) Descriptor() ([]byte, []int) {
-	return file_review_proto_rawDescGZIP(), []int{5}
+	return file_review_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *PostReviewRequest) GetProductId() string {
@@ -376,9 +256,9 @@ func (x *PostReviewRequest) GetProductId() string {
 	return ""
 }
 
-func (x *PostReviewRequest) GetUserId() string {
+func (x *PostReviewRequest) GetAccountId() string {
 	if x != nil {
-		return x.UserId
+		return x.AccountId
 	}
 	return ""
 }
@@ -406,7 +286,7 @@ type ReviewResponse struct {
 
 func (x *ReviewResponse) Reset() {
 	*x = ReviewResponse{}
-	mi := &file_review_proto_msgTypes[6]
+	mi := &file_review_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -418,7 +298,7 @@ func (x *ReviewResponse) String() string {
 func (*ReviewResponse) ProtoMessage() {}
 
 func (x *ReviewResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_review_proto_msgTypes[6]
+	mi := &file_review_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -431,7 +311,7 @@ func (x *ReviewResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewResponse.ProtoReflect.Descriptor instead.
 func (*ReviewResponse) Descriptor() ([]byte, []int) {
-	return file_review_proto_rawDescGZIP(), []int{6}
+	return file_review_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *ReviewResponse) GetReview() *Review {
@@ -450,7 +330,7 @@ type ReviewListResponse struct {
 
 func (x *ReviewListResponse) Reset() {
 	*x = ReviewListResponse{}
-	mi := &file_review_proto_msgTypes[7]
+	mi := &file_review_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -462,7 +342,7 @@ func (x *ReviewListResponse) String() string {
 func (*ReviewListResponse) ProtoMessage() {}
 
 func (x *ReviewListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_review_proto_msgTypes[7]
+	mi := &file_review_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -475,7 +355,7 @@ func (x *ReviewListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReviewListResponse.ProtoReflect.Descriptor instead.
 func (*ReviewListResponse) Descriptor() ([]byte, []int) {
-	return file_review_proto_rawDescGZIP(), []int{7}
+	return file_review_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ReviewListResponse) GetReviews() []*Review {
@@ -489,50 +369,34 @@ var File_review_proto protoreflect.FileDescriptor
 
 const file_review_proto_rawDesc = "" +
 	"\n" +
-	"\freview.proto\x12\bgenproto\"\xc0\x01\n" +
+	"\freview.proto\x12\bgenproto\"\xa4\x01\n" +
 	"\x06Review\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
-	"\n" +
-	"product_id\x18\x02 \x01(\tR\tproductId\x12\x17\n" +
-	"\auser_id\x18\x03 \x01(\tR\x06userId\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1c\n" +
+	"\tproductId\x18\x02 \x01(\tR\tproductId\x12\x1c\n" +
+	"\taccountId\x18\x03 \x01(\tR\taccountId\x12\x18\n" +
 	"\acontent\x18\x04 \x01(\tR\acontent\x12\x16\n" +
-	"\x06rating\x18\x05 \x01(\x05R\x06rating\x12\x1d\n" +
-	"\n" +
-	"created_at\x18\x06 \x01(\fR\tcreatedAt\x12\x1d\n" +
-	"\n" +
-	"updated_at\x18\a \x01(\fR\tupdatedAt\"!\n" +
+	"\x06rating\x18\x05 \x01(\x05R\x06rating\x12\x1c\n" +
+	"\tcreatedAt\x18\x06 \x01(\fR\tcreatedAt\"!\n" +
 	"\x0fReviewIdRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"Y\n" +
-	"\x10ProductIdRequest\x12\x1d\n" +
-	"\n" +
-	"product_id\x18\x01 \x01(\tR\tproductId\x12\x12\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"J\n" +
+	"\x10ProductIdRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04skip\x18\x02 \x01(\x04R\x04skip\x12\x12\n" +
-	"\x04take\x18\x03 \x01(\x04R\x04take\"P\n" +
-	"\rUserIdRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x12\n" +
-	"\x04skip\x18\x02 \x01(\x04R\x04skip\x12\x12\n" +
-	"\x04take\x18\x03 \x01(\x04R\x04take\"L\n" +
-	"\x12ProductUserRequest\x12\x1d\n" +
-	"\n" +
-	"product_id\x18\x01 \x01(\tR\tproductId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\"}\n" +
-	"\x11PostReviewRequest\x12\x1d\n" +
-	"\n" +
-	"product_id\x18\x01 \x01(\tR\tproductId\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\tR\x06userId\x12\x18\n" +
+	"\x04take\x18\x03 \x01(\x04R\x04take\"\x81\x01\n" +
+	"\x11PostReviewRequest\x12\x1c\n" +
+	"\tproductId\x18\x01 \x01(\tR\tproductId\x12\x1c\n" +
+	"\taccountId\x18\x02 \x01(\tR\taccountId\x12\x18\n" +
 	"\acontent\x18\x03 \x01(\tR\acontent\x12\x16\n" +
 	"\x06rating\x18\x04 \x01(\x05R\x06rating\":\n" +
 	"\x0eReviewResponse\x12(\n" +
 	"\x06review\x18\x01 \x01(\v2\x10.genproto.ReviewR\x06review\"@\n" +
 	"\x12ReviewListResponse\x12*\n" +
-	"\areviews\x18\x01 \x03(\v2\x10.genproto.ReviewR\areviews2\xff\x02\n" +
+	"\areviews\x18\x01 \x03(\v2\x10.genproto.ReviewR\areviews2\xe5\x01\n" +
 	"\rReviewService\x12C\n" +
 	"\n" +
 	"PostReview\x12\x1b.genproto.PostReviewRequest\x1a\x18.genproto.ReviewResponse\x128\n" +
-	"\tGetReview\x12\x19.genproto.ReviewIdRequest\x1a\x10.genproto.Review\x12O\n" +
-	"\x13GetReviewsByProduct\x12\x1a.genproto.ProductIdRequest\x1a\x1c.genproto.ReviewListResponse\x12S\n" +
-	"\x19GetReviewByProductAndUser\x12\x1c.genproto.ProductUserRequest\x1a\x18.genproto.ReviewResponse\x12I\n" +
-	"\x10GetReviewsByUser\x12\x17.genproto.UserIdRequest\x1a\x1c.genproto.ReviewListResponseB*Z(github.com/wignn/micro-3/review/genprotob\x06proto3"
+	"\tGetReview\x12\x19.genproto.ReviewIdRequest\x1a\x10.genproto.Review\x12U\n" +
+	"\x19GetReviewByProductAndUser\x12\x1a.genproto.ProductIdRequest\x1a\x1c.genproto.ReviewListResponseB*Z(github.com/wignn/micro-3/review/genprotob\x06proto3"
 
 var (
 	file_review_proto_rawDescOnce sync.Once
@@ -546,32 +410,26 @@ func file_review_proto_rawDescGZIP() []byte {
 	return file_review_proto_rawDescData
 }
 
-var file_review_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_review_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_review_proto_goTypes = []any{
 	(*Review)(nil),             // 0: genproto.Review
 	(*ReviewIdRequest)(nil),    // 1: genproto.ReviewIdRequest
 	(*ProductIdRequest)(nil),   // 2: genproto.ProductIdRequest
-	(*UserIdRequest)(nil),      // 3: genproto.UserIdRequest
-	(*ProductUserRequest)(nil), // 4: genproto.ProductUserRequest
-	(*PostReviewRequest)(nil),  // 5: genproto.PostReviewRequest
-	(*ReviewResponse)(nil),     // 6: genproto.ReviewResponse
-	(*ReviewListResponse)(nil), // 7: genproto.ReviewListResponse
+	(*PostReviewRequest)(nil),  // 3: genproto.PostReviewRequest
+	(*ReviewResponse)(nil),     // 4: genproto.ReviewResponse
+	(*ReviewListResponse)(nil), // 5: genproto.ReviewListResponse
 }
 var file_review_proto_depIdxs = []int32{
 	0, // 0: genproto.ReviewResponse.review:type_name -> genproto.Review
 	0, // 1: genproto.ReviewListResponse.reviews:type_name -> genproto.Review
-	5, // 2: genproto.ReviewService.PostReview:input_type -> genproto.PostReviewRequest
+	3, // 2: genproto.ReviewService.PostReview:input_type -> genproto.PostReviewRequest
 	1, // 3: genproto.ReviewService.GetReview:input_type -> genproto.ReviewIdRequest
-	2, // 4: genproto.ReviewService.GetReviewsByProduct:input_type -> genproto.ProductIdRequest
-	4, // 5: genproto.ReviewService.GetReviewByProductAndUser:input_type -> genproto.ProductUserRequest
-	3, // 6: genproto.ReviewService.GetReviewsByUser:input_type -> genproto.UserIdRequest
-	6, // 7: genproto.ReviewService.PostReview:output_type -> genproto.ReviewResponse
-	0, // 8: genproto.ReviewService.GetReview:output_type -> genproto.Review
-	7, // 9: genproto.ReviewService.GetReviewsByProduct:output_type -> genproto.ReviewListResponse
-	6, // 10: genproto.ReviewService.GetReviewByProductAndUser:output_type -> genproto.ReviewResponse
-	7, // 11: genproto.ReviewService.GetReviewsByUser:output_type -> genproto.ReviewListResponse
-	7, // [7:12] is the sub-list for method output_type
-	2, // [2:7] is the sub-list for method input_type
+	2, // 4: genproto.ReviewService.GetReviewByProductAndUser:input_type -> genproto.ProductIdRequest
+	4, // 5: genproto.ReviewService.PostReview:output_type -> genproto.ReviewResponse
+	0, // 6: genproto.ReviewService.GetReview:output_type -> genproto.Review
+	5, // 7: genproto.ReviewService.GetReviewByProductAndUser:output_type -> genproto.ReviewListResponse
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -588,7 +446,7 @@ func file_review_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_review_proto_rawDesc), len(file_review_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

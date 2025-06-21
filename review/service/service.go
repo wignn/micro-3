@@ -2,17 +2,17 @@ package service
 
 import (
 	"context"
+	"time"
+
 	"github.com/segmentio/ksuid"
 	"github.com/wignn/micro-3/review/model"
 	"github.com/wignn/micro-3/review/repository"
 )
 
 type ReviewService interface {
-	PutReview(c context.Context, productId, userId string, rating int, comment string) (*model.Review, error)
+	PutReview(c context.Context, productId, acccountId string, rating int, comment string) (*model.Review, error)
 	GetReviewById(c context.Context, id string) (*model.Review, error)
-	ListReviewsByProduct(c context.Context, productId string, skip uint64, take uint64) ([]*model.Review, error)
-	ListReviewsByUser(c context.Context, userId string, skip uint64, take uint64) ([]*model.Review, error)
-	GetReviewByProductAndUser(c context.Context, productId, userId string) (*model.Review, error)
+	GetReviewByProductAndUser(c context.Context, id string, skip, take uint64) ([]*model.Review, error)
 }
 
 type reviewService struct {
@@ -23,13 +23,14 @@ func NewReviewService(r repository.ReviewRepository) ReviewService {
 	return &reviewService{r}
 }
 
-func (s *reviewService) PutReview(c context.Context, productId, userId string, rating int, comment string) (*model.Review, error) {
+func (s *reviewService) PutReview(c context.Context, productId, acccountId string, rating int, content string) (*model.Review, error) {
 	rev := &model.Review{
 		ID:        ksuid.New().String(),
 		ProductID: productId,
-		UserID:    userId,
+		AccountID: acccountId,
 		Rating:    rating,
-		Comment:   comment,
+		Content:   content,
+		CreatedAt: time.Now().UTC(),
 	}
 
 	if err := s.repository.PutReview(c, rev); err != nil {
@@ -47,34 +48,9 @@ func (s *reviewService) GetReviewById(c context.Context, id string) (*model.Revi
 	return rev, nil
 }
 
-func (s *reviewService) ListReviewsByProduct(c context.Context, productId string, skip uint64, take uint64) ([]*model.Review, error) {
-	if take > 100 || (take == 0 && skip == 0) {
-		take = 100
-	}
 
-	reviews, err := s.repository.ListReviewsByProduct(c, productId, skip, take)
-	if err != nil {
-		return nil, err
-	}
-
-	return reviews, nil
-}
-
-func (s *reviewService) ListReviewsByUser(c context.Context, userId string, skip uint64, take uint64) ([]*model.Review, error) {
-	if take > 100 || (take == 0 && skip == 0) {
-		take = 100
-	}
-
-	reviews, err := s.repository.ListReviewsByUser(c, userId, skip, take)
-	if err != nil {
-		return nil, err
-	}
-
-	return reviews, nil
-}
-
-func (s *reviewService) GetReviewByProductAndUser(c context.Context, productId, userId string) (*model.Review, error) {
-	review, err := s.repository.GetReviewByProductAndUser(c, productId, userId)
+func (s *reviewService) GetReviewByProductAndUser(c context.Context, id string, skip, take uint64) ([]*model.Review, error) {
+	review, err := s.repository.GetReviewByProductAndUser(c, id, skip, take)
 	if err != nil {
 		return nil, err
 	}

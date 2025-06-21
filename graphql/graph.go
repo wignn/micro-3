@@ -5,15 +5,17 @@ import (
 	account "github.com/wignn/micro-3/account/client"
 	catalog "github.com/wignn/micro-3/catalog/client"
 	order "github.com/wignn/micro-3/order/client"
+	review "github.com/wignn/micro-3/review/client"
 )
 
 type GraphQLServer struct {
 	accountClient *account.AccountClient
 	catalogClient *catalog.CatalogClient
 	orderClient  *order.Client
+	reviewClient       *review.ReviewClient
 }
 
-func NewGraphQLServer(accountUrl, catalogUrl, orderUrl string) (*GraphQLServer, error) {
+func NewGraphQLServer(accountUrl, catalogUrl, orderUrl, reviewUrl string) (*GraphQLServer, error) {
 
 	accoutClient, err := account.NewClient(accountUrl)
 	if err != nil {
@@ -32,10 +34,17 @@ func NewGraphQLServer(accountUrl, catalogUrl, orderUrl string) (*GraphQLServer, 
 		return nil, err
 	}
 
+
+	reviewClient, err := review.NewClient(reviewUrl)
+	if err != nil {
+		reviewClient.Close()
+		return nil, err
+	}
 	return &GraphQLServer{
 		accoutClient,
 		catalogClient,
 		orderClient,
+		reviewClient,
 	}, nil
 }
 

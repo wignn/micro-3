@@ -22,8 +22,8 @@ func (r *queryResolver) Accounts(ctx context.Context, pagination *PaginationInpu
 			return nil, err
 		}
 		return []*Account{{
-			ID:   r.ID,
-			Name: r.Name,
+			ID:    r.ID,
+			Name:  r.Name,
 			Email: r.Email,
 		}}, nil
 	}
@@ -42,15 +42,15 @@ func (r *queryResolver) Accounts(ctx context.Context, pagination *PaginationInpu
 	var accounts []*Account
 	for _, a := range accountList {
 		account := &Account{
-			ID:   a.ID,
-			Name: a.Name,
+			ID:    a.ID,
+			Name:  a.Name,
 			Email: a.Email,
 		}
 		accounts = append(accounts, account)
 	}
-
 	return accounts, nil
 }
+
 func (r *queryResolver) Products(c context.Context, pagination *PaginationInput, query *string, id *string) ([]*Product, error) {
 	c, cancel := context.WithTimeout(c, 3*time.Second)
 	defer cancel()
@@ -67,7 +67,7 @@ func (r *queryResolver) Products(c context.Context, pagination *PaginationInput,
 			Name:        r.Name,
 			Description: r.Description,
 			Price:       r.Price,
-			Image: 	 r.Image,
+			Image:       r.Image,
 		}}, nil
 	}
 
@@ -80,6 +80,7 @@ func (r *queryResolver) Products(c context.Context, pagination *PaginationInput,
 	if query != nil {
 		q = *query
 	}
+	
 	productList, err := r.server.catalogClient.GetProducts(c, skip, take, nil, q)
 	if err != nil {
 		log.Println(err)
@@ -87,6 +88,7 @@ func (r *queryResolver) Products(c context.Context, pagination *PaginationInput,
 	}
 
 	var products []*Product
+
 	for _, a := range productList {
 		products = append(products,
 			&Product{
@@ -94,13 +96,69 @@ func (r *queryResolver) Products(c context.Context, pagination *PaginationInput,
 				Name:        a.Name,
 				Description: a.Description,
 				Price:       a.Price,
-				Image: 	 a.Image,
+				Image:       a.Image,
 			},
 		)
 	}
 
 	return products, nil
 }
+func (r *queryResolver) Reviews(c context.Context, pagination *PaginationInput, id *string) ([]*Review, error) {
+	c, cancel := context.WithTimeout(c, 3*time.Second)
+	defer cancel()
+
+	if pagination == nil {
+		rv, err := r.server.reviewClient.GetReview(c, *id)
+		if err != nil {
+			log.Println("GetReview error:", err)
+			return nil, err
+		}
+
+		var createdAt time.Time
+
+		if err := createdAt.UnmarshalBinary(rv.CreatedAt); err != nil {
+			log.Println("UnmarshalBinary error on review ID", rv.Id, ":", err)
+			return nil, err
+		} 
+
+		return []*Review{{
+			ID:        rv.Id,
+			ProductID: rv.ProductId,
+			AccountID: rv.AccountId,
+			Rating:    int(rv.Rating),
+			Content:   &rv.Content,
+			CreatedAt: createdAt,
+		}}, nil
+	}
+
+	skip, take := pagination.bounds()
+	reviewList, err := r.server.reviewClient.GetReviews(c, *id, skip, take)
+	if err != nil {
+		log.Println("GetReviews error:", err)
+		return nil, err
+	}
+
+	var reviews []*Review
+	for _, a := range reviewList {
+		var createdAt time.Time
+		if err := createdAt.UnmarshalBinary(a.CreatedAt); err != nil {
+			log.Println("UnmarshalBinary error on review ID", a.Id, ":", err)
+			continue
+		}
+
+		reviews = append(reviews, &Review{
+			ID:        a.Id,
+			ProductID: a.ProductId,
+			AccountID: a.AccountId,
+			Rating:    int(a.Rating),
+			Content:   &a.Content,
+			CreatedAt: createdAt,
+		})
+	}
+
+	return reviews, nil
+}
+
 
 func (p PaginationInput) bounds() (uint64, uint64) {
 	skipValue := uint64(0)

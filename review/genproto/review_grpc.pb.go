@@ -21,9 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	ReviewService_PostReview_FullMethodName                = "/genproto.ReviewService/PostReview"
 	ReviewService_GetReview_FullMethodName                 = "/genproto.ReviewService/GetReview"
-	ReviewService_GetReviewsByProduct_FullMethodName       = "/genproto.ReviewService/GetReviewsByProduct"
 	ReviewService_GetReviewByProductAndUser_FullMethodName = "/genproto.ReviewService/GetReviewByProductAndUser"
-	ReviewService_GetReviewsByUser_FullMethodName          = "/genproto.ReviewService/GetReviewsByUser"
 )
 
 // ReviewServiceClient is the client API for ReviewService service.
@@ -32,9 +30,7 @@ const (
 type ReviewServiceClient interface {
 	PostReview(ctx context.Context, in *PostReviewRequest, opts ...grpc.CallOption) (*ReviewResponse, error)
 	GetReview(ctx context.Context, in *ReviewIdRequest, opts ...grpc.CallOption) (*Review, error)
-	GetReviewsByProduct(ctx context.Context, in *ProductIdRequest, opts ...grpc.CallOption) (*ReviewListResponse, error)
-	GetReviewByProductAndUser(ctx context.Context, in *ProductUserRequest, opts ...grpc.CallOption) (*ReviewResponse, error)
-	GetReviewsByUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ReviewListResponse, error)
+	GetReviewByProductAndUser(ctx context.Context, in *ProductIdRequest, opts ...grpc.CallOption) (*ReviewListResponse, error)
 }
 
 type reviewServiceClient struct {
@@ -65,30 +61,10 @@ func (c *reviewServiceClient) GetReview(ctx context.Context, in *ReviewIdRequest
 	return out, nil
 }
 
-func (c *reviewServiceClient) GetReviewsByProduct(ctx context.Context, in *ProductIdRequest, opts ...grpc.CallOption) (*ReviewListResponse, error) {
+func (c *reviewServiceClient) GetReviewByProductAndUser(ctx context.Context, in *ProductIdRequest, opts ...grpc.CallOption) (*ReviewListResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ReviewListResponse)
-	err := c.cc.Invoke(ctx, ReviewService_GetReviewsByProduct_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *reviewServiceClient) GetReviewByProductAndUser(ctx context.Context, in *ProductUserRequest, opts ...grpc.CallOption) (*ReviewResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ReviewResponse)
 	err := c.cc.Invoke(ctx, ReviewService_GetReviewByProductAndUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *reviewServiceClient) GetReviewsByUser(ctx context.Context, in *UserIdRequest, opts ...grpc.CallOption) (*ReviewListResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ReviewListResponse)
-	err := c.cc.Invoke(ctx, ReviewService_GetReviewsByUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -101,9 +77,7 @@ func (c *reviewServiceClient) GetReviewsByUser(ctx context.Context, in *UserIdRe
 type ReviewServiceServer interface {
 	PostReview(context.Context, *PostReviewRequest) (*ReviewResponse, error)
 	GetReview(context.Context, *ReviewIdRequest) (*Review, error)
-	GetReviewsByProduct(context.Context, *ProductIdRequest) (*ReviewListResponse, error)
-	GetReviewByProductAndUser(context.Context, *ProductUserRequest) (*ReviewResponse, error)
-	GetReviewsByUser(context.Context, *UserIdRequest) (*ReviewListResponse, error)
+	GetReviewByProductAndUser(context.Context, *ProductIdRequest) (*ReviewListResponse, error)
 	mustEmbedUnimplementedReviewServiceServer()
 }
 
@@ -120,14 +94,8 @@ func (UnimplementedReviewServiceServer) PostReview(context.Context, *PostReviewR
 func (UnimplementedReviewServiceServer) GetReview(context.Context, *ReviewIdRequest) (*Review, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetReview not implemented")
 }
-func (UnimplementedReviewServiceServer) GetReviewsByProduct(context.Context, *ProductIdRequest) (*ReviewListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetReviewsByProduct not implemented")
-}
-func (UnimplementedReviewServiceServer) GetReviewByProductAndUser(context.Context, *ProductUserRequest) (*ReviewResponse, error) {
+func (UnimplementedReviewServiceServer) GetReviewByProductAndUser(context.Context, *ProductIdRequest) (*ReviewListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetReviewByProductAndUser not implemented")
-}
-func (UnimplementedReviewServiceServer) GetReviewsByUser(context.Context, *UserIdRequest) (*ReviewListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetReviewsByUser not implemented")
 }
 func (UnimplementedReviewServiceServer) mustEmbedUnimplementedReviewServiceServer() {}
 func (UnimplementedReviewServiceServer) testEmbeddedByValue()                       {}
@@ -186,26 +154,8 @@ func _ReviewService_GetReview_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ReviewService_GetReviewsByProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProductIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ReviewServiceServer).GetReviewsByProduct(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ReviewService_GetReviewsByProduct_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReviewServiceServer).GetReviewsByProduct(ctx, req.(*ProductIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ReviewService_GetReviewByProductAndUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ProductUserRequest)
+	in := new(ProductIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -217,25 +167,7 @@ func _ReviewService_GetReviewByProductAndUser_Handler(srv interface{}, ctx conte
 		FullMethod: ReviewService_GetReviewByProductAndUser_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReviewServiceServer).GetReviewByProductAndUser(ctx, req.(*ProductUserRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ReviewService_GetReviewsByUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ReviewServiceServer).GetReviewsByUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ReviewService_GetReviewsByUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ReviewServiceServer).GetReviewsByUser(ctx, req.(*UserIdRequest))
+		return srv.(ReviewServiceServer).GetReviewByProductAndUser(ctx, req.(*ProductIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -256,16 +188,8 @@ var ReviewService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ReviewService_GetReview_Handler,
 		},
 		{
-			MethodName: "GetReviewsByProduct",
-			Handler:    _ReviewService_GetReviewsByProduct_Handler,
-		},
-		{
 			MethodName: "GetReviewByProductAndUser",
 			Handler:    _ReviewService_GetReviewByProductAndUser_Handler,
-		},
-		{
-			MethodName: "GetReviewsByUser",
-			Handler:    _ReviewService_GetReviewsByUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
