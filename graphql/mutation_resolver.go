@@ -117,8 +117,6 @@ func (r *mutationResolver) CreateReview(ctx context.Context, in ReviewInput) (*R
 
 	return &Review{
 		ID:        review.ID,
-		ProductID: review.ProductID,
-		AccountID: review.AccountID,
 		Rating:    int(review.Rating),
 		Content:   &review.Content,
 		CreatedAt: review.CreatedAt,

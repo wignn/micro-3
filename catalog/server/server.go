@@ -50,6 +50,7 @@ func (s *grpcServer) GetProduct(c context.Context, r *genproto.GetProductRequest
 		log.Println(err)
 		return nil, err
 	}
+	log.Println("GetProduct response:", p)
 	return &genproto.GetProductResponse{
 		Product: &genproto.Product{
 			Id:          p.ID,

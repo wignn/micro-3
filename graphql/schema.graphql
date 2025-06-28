@@ -18,10 +18,10 @@ type Product {
 
 type Review {
   id: String!
-  productId: String!
-  accountId: String! 
   content: String
   rating: Int!
+  Account: Account!
+  Product: Product!
   createdAt: Time!
 }
 

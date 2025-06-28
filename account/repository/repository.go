@@ -53,9 +53,9 @@ func (r *PostgresRepository) PutAccount(c context.Context, a *model.Account) err
 }
 
 func (r *PostgresRepository) GetAccountById(c context.Context, id string) (*model.Account, error) {
-	row := r.db.QueryRowContext(c, "SELECT id, name FROM accounts WHERE id = $1", id)
+	row := r.db.QueryRowContext(c, "SELECT id, name, email FROM accounts WHERE id = $1", id)
 	a := &model.Account{}
-	if err := row.Scan(&a.ID, &a.Name,); err != nil {
+	if err := row.Scan(&a.ID, &a.Name, &a.Email); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
 		}
@@ -65,7 +65,7 @@ func (r *PostgresRepository) GetAccountById(c context.Context, id string) (*mode
 }
 
 func (r *PostgresRepository) ListAccount(c context.Context, skip uint64, take uint64) ([]*model.Account, error) {
-	rows, err := r.db.QueryContext(c, "SELECT id, name FROM accounts OFFSET $1 LIMIT $2", skip, take)
+	rows, err := r.db.QueryContext(c, "SELECT id, name, email FROM accounts OFFSET $1 LIMIT $2", skip, take)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (r *PostgresRepository) ListAccount(c context.Context, skip uint64, take ui
 	
 	for rows.Next() {
 		a := &model.Account{}
-		if err := rows.Scan(&a.ID, &a.Name); err != nil {
+		if err := rows.Scan(&a.ID, &a.Name, &a.Email); err != nil {
 			return nil, err
 		}
 		accounts = append(accounts, a)

@@ -72,10 +72,10 @@ type Query struct {
 
 type Review struct {
 	ID        string    `json:"id"`
-	ProductID string    `json:"productId"`
-	AccountID string    `json:"accountId"`
 	Content   *string   `json:"content,omitempty"`
 	Rating    int       `json:"rating"`
+	Account   *Account  `json:"Account"`
+	Product   *Product  `json:"Product"`
 	CreatedAt time.Time `json:"createdAt"`
 }
 

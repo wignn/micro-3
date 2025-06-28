@@ -43,7 +43,7 @@ func NewElasticRepository(url string) (CatalogRepository, error) {
 
 func (r *elasticRepository) Close() {}
 
-func (r *elasticRepository) PutProduct(ctx context.Context, p *model.Product) error {
+func (r *elasticRepository) PutProduct(c context.Context, p *model.Product) error {
 	_, err := r.client.Index().
 		Index("catalog").
 		Type("product").
@@ -54,7 +54,7 @@ func (r *elasticRepository) PutProduct(ctx context.Context, p *model.Product) er
 			Price:       p.Price,
 			Image:       p.Image,
 		}).
-		Do(ctx)
+		Do(c)
 	return err
 }
 

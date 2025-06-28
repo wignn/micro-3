@@ -100,11 +100,11 @@ type ComplexityRoot struct {
 	}
 
 	Review struct {
-		AccountID func(childComplexity int) int
+		Account   func(childComplexity int) int
 		Content   func(childComplexity int) int
 		CreatedAt func(childComplexity int) int
 		ID        func(childComplexity int) int
-		ProductID func(childComplexity int) int
+		Product   func(childComplexity int) int
 		Rating    func(childComplexity int) int
 	}
 }
@@ -394,12 +394,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Query.Reviews(childComplexity, args["pagination"].(*PaginationInput), args["id"].(*string)), true
 
-	case "Review.accountId":
-		if e.complexity.Review.AccountID == nil {
+	case "Review.Account":
+		if e.complexity.Review.Account == nil {
 			break
 		}
 
-		return e.complexity.Review.AccountID(childComplexity), true
+		return e.complexity.Review.Account(childComplexity), true
 
 	case "Review.content":
 		if e.complexity.Review.Content == nil {
@@ -422,12 +422,12 @@ func (e *executableSchema) Complexity(ctx context.Context, typeName, field strin
 
 		return e.complexity.Review.ID(childComplexity), true
 
-	case "Review.productId":
-		if e.complexity.Review.ProductID == nil {
+	case "Review.Product":
+		if e.complexity.Review.Product == nil {
 			break
 		}
 
-		return e.complexity.Review.ProductID(childComplexity), true
+		return e.complexity.Review.Product(childComplexity), true
 
 	case "Review.rating":
 		if e.complexity.Review.Rating == nil {
@@ -1511,14 +1511,14 @@ func (ec *executionContext) fieldContext_Mutation_createReview(ctx context.Conte
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Review_id(ctx, field)
-			case "productId":
-				return ec.fieldContext_Review_productId(ctx, field)
-			case "accountId":
-				return ec.fieldContext_Review_accountId(ctx, field)
 			case "content":
 				return ec.fieldContext_Review_content(ctx, field)
 			case "rating":
 				return ec.fieldContext_Review_rating(ctx, field)
+			case "Account":
+				return ec.fieldContext_Review_Account(ctx, field)
+			case "Product":
+				return ec.fieldContext_Review_Product(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Review_createdAt(ctx, field)
 			}
@@ -2511,14 +2511,14 @@ func (ec *executionContext) fieldContext_Query_reviews(ctx context.Context, fiel
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Review_id(ctx, field)
-			case "productId":
-				return ec.fieldContext_Review_productId(ctx, field)
-			case "accountId":
-				return ec.fieldContext_Review_accountId(ctx, field)
 			case "content":
 				return ec.fieldContext_Review_content(ctx, field)
 			case "rating":
 				return ec.fieldContext_Review_rating(ctx, field)
+			case "Account":
+				return ec.fieldContext_Review_Account(ctx, field)
+			case "Product":
+				return ec.fieldContext_Review_Product(ctx, field)
 			case "createdAt":
 				return ec.fieldContext_Review_createdAt(ctx, field)
 			}
@@ -2714,94 +2714,6 @@ func (ec *executionContext) fieldContext_Review_id(_ context.Context, field grap
 	return fc, nil
 }
 
-func (ec *executionContext) _Review_productId(ctx context.Context, field graphql.CollectedField, obj *Review) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Review_productId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ProductID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Review_productId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Review",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Review_accountId(ctx context.Context, field graphql.CollectedField, obj *Review) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Review_accountId(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.AccountID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Review_accountId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Review",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Review_content(ctx context.Context, field graphql.CollectedField, obj *Review) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Review_content(ctx, field)
 	if err != nil {
@@ -2882,6 +2794,116 @@ func (ec *executionContext) fieldContext_Review_rating(_ context.Context, field 
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Review_Account(ctx context.Context, field graphql.CollectedField, obj *Review) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Review_Account(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Account, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*Account)
+	fc.Result = res
+	return ec.marshalNAccount2ᚖgithubᚗcomᚋwignnᚋmicroᚑ3ᚋgraphqlᚐAccount(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Review_Account(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Review",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Account_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Account_name(ctx, field)
+			case "email":
+				return ec.fieldContext_Account_email(ctx, field)
+			case "orders":
+				return ec.fieldContext_Account_orders(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Account", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Review_Product(ctx context.Context, field graphql.CollectedField, obj *Review) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Review_Product(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Product, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*Product)
+	fc.Result = res
+	return ec.marshalNProduct2ᚖgithubᚗcomᚋwignnᚋmicroᚑ3ᚋgraphqlᚐProduct(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Review_Product(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Review",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Product_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Product_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Product_description(ctx, field)
+			case "price":
+				return ec.fieldContext_Product_price(ctx, field)
+			case "image":
+				return ec.fieldContext_Product_image(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Product", field.Name)
 		},
 	}
 	return fc, nil
@@ -5634,20 +5656,20 @@ func (ec *executionContext) _Review(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "productId":
-			out.Values[i] = ec._Review_productId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "accountId":
-			out.Values[i] = ec._Review_accountId(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		case "content":
 			out.Values[i] = ec._Review_content(ctx, field, obj)
 		case "rating":
 			out.Values[i] = ec._Review_rating(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "Account":
+			out.Values[i] = ec._Review_Account(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "Product":
+			out.Values[i] = ec._Review_Product(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

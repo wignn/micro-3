@@ -51,9 +51,11 @@ func (s *grpcServer) GetAccount(ctx context.Context, req *genproto.GetAccountReq
 		Account: &genproto.Account{
 			Id:   a.ID,
 			Name: a.Name,
+			Email: a.Email,
 		},
 	}, nil
 }
+
 
 func (s *grpcServer) GetAccounts(ctx context.Context, req *genproto.GetAccountsRequest) (*genproto.GetAccountsResponse, error) {
 	res, err := s.service.ListAccount(ctx, req.Skip, req.Take)
@@ -63,8 +65,9 @@ func (s *grpcServer) GetAccounts(ctx context.Context, req *genproto.GetAccountsR
 	var accounts []*genproto.Account
 	for _, a := range res {
 		accounts = append(accounts, &genproto.Account{
-			Id:   a.ID,
-			Name: a.Name,
+			Id:    a.ID,
+			Name:  a.Name,
+			Email: a.Email,
 		})
 	}
 
