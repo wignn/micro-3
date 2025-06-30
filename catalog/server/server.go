@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-
 	"github.com/wignn/micro-3/catalog/genproto"
 	"github.com/wignn/micro-3/catalog/model"
 	"github.com/wignn/micro-3/catalog/service"
