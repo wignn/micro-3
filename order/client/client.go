@@ -10,25 +10,25 @@ import (
 	"google.golang.org/grpc"
 )
 
-type Client struct {
+type OrderClient struct {
 	conn    *grpc.ClientConn
 	service genproto.OrderServiceClient
 }
 
-func NewClient(url string) (*Client, error) {
+func NewClient(url string) (*OrderClient, error) {
 	conn, err := grpc.Dial(url, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}
 	c := genproto.NewOrderServiceClient(conn)
-	return &Client{conn, c}, nil
+	return &OrderClient{conn, c}, nil
 }
 
-func (c *Client) Close() {
+func (c *OrderClient) Close() {
 	c.conn.Close()
 }
 
-func (c *Client) PostOrder(
+func (c *OrderClient) PostOrder(
 	ctx context.Context,
 	accountID string,
 	products []*model.OrderedProduct,
@@ -71,7 +71,7 @@ func (c *Client) PostOrder(
 	}, nil
 }
 
-func (cl *Client) GetOrdersForAccount(c context.Context, accountID string) ([]model.Order, error) {
+func (cl *OrderClient) GetOrdersForAccount(c context.Context, accountID string) ([]model.Order, error) {
 	r, err := cl.service.GetOrdersForAccount(c, &genproto.GetOrdersForAccountRequest{
 		AccountId: accountID,
 	})

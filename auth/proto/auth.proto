@@ -21,11 +21,15 @@ message PostAuthRequest {
     string password = 2;
 }
 
+message PostRefreshTokenRequest {
+    string refreshToken = 1;
+}
 
 message PostAuthResponse {
     Auth auth = 1;
 }
 
 service AuthService {
-    rpc PostAuth(PostAuthRequest) returns (PostAuthResponse);
+    rpc Login(PostAuthRequest) returns (PostAuthResponse);
+    rpc RefreshToken(PostRefreshTokenRequest) returns (BackendToken);
 }

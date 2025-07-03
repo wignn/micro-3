@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/99designs/gqlgen/graphql"
 	account "github.com/wignn/micro-3/account/client"
+	auth "github.com/wignn/micro-3/auth/client"
 	catalog "github.com/wignn/micro-3/catalog/client"
 	order "github.com/wignn/micro-3/order/client"
 	review "github.com/wignn/micro-3/review/client"
@@ -11,11 +12,12 @@ import (
 type GraphQLServer struct {
 	accountClient *account.AccountClient
 	catalogClient *catalog.CatalogClient
-	orderClient  *order.Client
-	reviewClient       *review.ReviewClient
+	orderClient   *order.OrderClient
+	authClient    *auth.AuthClient
+	reviewClient  *review.ReviewClient
 }
 
-func NewGraphQLServer(accountUrl, catalogUrl, orderUrl, reviewUrl string) (*GraphQLServer, error) {
+func NewGraphQLServer(accountUrl, catalogUrl, orderUrl, reviewUrl,authUrl string) (*GraphQLServer, error) {
 
 	accoutClient, err := account.NewClient(accountUrl)
 	if err != nil {
@@ -34,8 +36,13 @@ func NewGraphQLServer(accountUrl, catalogUrl, orderUrl, reviewUrl string) (*Grap
 		return nil, err
 	}
 
-
 	reviewClient, err := review.NewClient(reviewUrl)
+	if err != nil {
+		reviewClient.Close()
+		return nil, err
+	}
+
+	authClient, err := auth.NewClient(authUrl)
 	if err != nil {
 		reviewClient.Close()
 		return nil, err
@@ -44,6 +51,7 @@ func NewGraphQLServer(accountUrl, catalogUrl, orderUrl, reviewUrl string) (*Grap
 		accoutClient,
 		catalogClient,
 		orderClient,
+		authClient,
 		reviewClient,
 	}, nil
 }
@@ -68,6 +76,6 @@ func (s *GraphQLServer) Account() AccountResolver {
 
 func (s *GraphQLServer) ToExecutableSchema() (graphql.ExecutableSchema, error) {
 	return NewExecutableSchema(Config{
-			Resolvers: s,
-		}), nil
+		Resolvers: s,
+	}), nil
 }

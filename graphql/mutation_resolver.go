@@ -133,3 +133,43 @@ func (r *mutationResolver) DeleteProduct(c context.Context, id string) (*DeleteP
 	}
 	return &DeleteProductResponse{Success: result.Success, Message: &result.Message, DeletedID: result.DeletedID}, nil
 }
+
+
+func (r *mutationResolver) Login(c context.Context, in LoginInput) (*AuthResponse, error) {
+	ctx, cancel := context.WithTimeout(c, 3*time.Second)
+	defer cancel()
+
+	token, err := r.server.authClient.Login(ctx, in.Email, in.Password)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return &AuthResponse{
+		ID:           token.Auth.Id,
+		Email:        token.Auth.Email,
+		BackendToken: &Token{
+			AccessToken:  token.Auth.Token.AccessToken,
+			RefreshToken: token.Auth.Token.RefreshToken,
+			ExpiresIn:    int(token.Auth.Token.ExpiresAt),
+		},
+	}, nil
+}
+
+
+func (r *mutationResolver) RefreshToken(c context.Context, refreshToken string) (*Token, error) {
+	ctx, cancel := context.WithTimeout(c, 3*time.Second)
+	defer cancel()
+
+	newToken, err := r.server.authClient.RefreshToken(ctx, refreshToken)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	return &Token{
+		AccessToken:  newToken.AccessToken,
+		RefreshToken: newToken.RefreshToken,
+		ExpiresIn:    int(newToken.ExpiresAt),
+	}, nil
+}

@@ -193,6 +193,50 @@ func (x *PostAuthRequest) GetPassword() string {
 	return ""
 }
 
+type PostRefreshTokenRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refreshToken,proto3" json:"refreshToken,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PostRefreshTokenRequest) Reset() {
+	*x = PostRefreshTokenRequest{}
+	mi := &file_auth_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PostRefreshTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PostRefreshTokenRequest) ProtoMessage() {}
+
+func (x *PostRefreshTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PostRefreshTokenRequest.ProtoReflect.Descriptor instead.
+func (*PostRefreshTokenRequest) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PostRefreshTokenRequest) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
 type PostAuthResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Auth          *Auth                  `protobuf:"bytes,1,opt,name=auth,proto3" json:"auth,omitempty"`
@@ -202,7 +246,7 @@ type PostAuthResponse struct {
 
 func (x *PostAuthResponse) Reset() {
 	*x = PostAuthResponse{}
-	mi := &file_auth_proto_msgTypes[3]
+	mi := &file_auth_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -214,7 +258,7 @@ func (x *PostAuthResponse) String() string {
 func (*PostAuthResponse) ProtoMessage() {}
 
 func (x *PostAuthResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_auth_proto_msgTypes[3]
+	mi := &file_auth_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -227,7 +271,7 @@ func (x *PostAuthResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostAuthResponse.ProtoReflect.Descriptor instead.
 func (*PostAuthResponse) Descriptor() ([]byte, []int) {
-	return file_auth_proto_rawDescGZIP(), []int{3}
+	return file_auth_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *PostAuthResponse) GetAuth() *Auth {
@@ -253,11 +297,14 @@ const file_auth_proto_rawDesc = "" +
 	"\texpiresAt\x18\x03 \x01(\x04R\texpiresAt\"C\n" +
 	"\x0fPostAuthRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"6\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"=\n" +
+	"\x17PostRefreshTokenRequest\x12\"\n" +
+	"\frefreshToken\x18\x01 \x01(\tR\frefreshToken\"6\n" +
 	"\x10PostAuthResponse\x12\"\n" +
-	"\x04auth\x18\x01 \x01(\v2\x0e.genproto.AuthR\x04auth2P\n" +
-	"\vAuthService\x12A\n" +
-	"\bPostAuth\x12\x19.genproto.PostAuthRequest\x1a\x1a.genproto.PostAuthResponseB(Z&github.com/wignn/micro-3/auth/genprotob\x06proto3"
+	"\x04auth\x18\x01 \x01(\v2\x0e.genproto.AuthR\x04auth2\x98\x01\n" +
+	"\vAuthService\x12>\n" +
+	"\x05Login\x12\x19.genproto.PostAuthRequest\x1a\x1a.genproto.PostAuthResponse\x12I\n" +
+	"\fRefreshToken\x12!.genproto.PostRefreshTokenRequest\x1a\x16.genproto.BackendTokenB(Z&github.com/wignn/micro-3/auth/genprotob\x06proto3"
 
 var (
 	file_auth_proto_rawDescOnce sync.Once
@@ -271,20 +318,23 @@ func file_auth_proto_rawDescGZIP() []byte {
 	return file_auth_proto_rawDescData
 }
 
-var file_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_auth_proto_goTypes = []any{
-	(*Auth)(nil),             // 0: genproto.Auth
-	(*BackendToken)(nil),     // 1: genproto.BackendToken
-	(*PostAuthRequest)(nil),  // 2: genproto.PostAuthRequest
-	(*PostAuthResponse)(nil), // 3: genproto.PostAuthResponse
+	(*Auth)(nil),                    // 0: genproto.Auth
+	(*BackendToken)(nil),            // 1: genproto.BackendToken
+	(*PostAuthRequest)(nil),         // 2: genproto.PostAuthRequest
+	(*PostRefreshTokenRequest)(nil), // 3: genproto.PostRefreshTokenRequest
+	(*PostAuthResponse)(nil),        // 4: genproto.PostAuthResponse
 }
 var file_auth_proto_depIdxs = []int32{
 	1, // 0: genproto.Auth.token:type_name -> genproto.BackendToken
 	0, // 1: genproto.PostAuthResponse.auth:type_name -> genproto.Auth
-	2, // 2: genproto.AuthService.PostAuth:input_type -> genproto.PostAuthRequest
-	3, // 3: genproto.AuthService.PostAuth:output_type -> genproto.PostAuthResponse
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
+	2, // 2: genproto.AuthService.Login:input_type -> genproto.PostAuthRequest
+	3, // 3: genproto.AuthService.RefreshToken:input_type -> genproto.PostRefreshTokenRequest
+	4, // 4: genproto.AuthService.Login:output_type -> genproto.PostAuthResponse
+	1, // 5: genproto.AuthService.RefreshToken:output_type -> genproto.BackendToken
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -301,7 +351,7 @@ func file_auth_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_auth_proto_rawDesc), len(file_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

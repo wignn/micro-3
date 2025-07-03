@@ -19,14 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_PostAuth_FullMethodName = "/genproto.AuthService/PostAuth"
+	AuthService_Login_FullMethodName        = "/genproto.AuthService/Login"
+	AuthService_RefreshToken_FullMethodName = "/genproto.AuthService/RefreshToken"
 )
 
 // AuthServiceClient is the client API for AuthService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
-	PostAuth(ctx context.Context, in *PostAuthRequest, opts ...grpc.CallOption) (*PostAuthResponse, error)
+	Login(ctx context.Context, in *PostAuthRequest, opts ...grpc.CallOption) (*PostAuthResponse, error)
+	RefreshToken(ctx context.Context, in *PostRefreshTokenRequest, opts ...grpc.CallOption) (*BackendToken, error)
 }
 
 type authServiceClient struct {
@@ -37,10 +39,20 @@ func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 	return &authServiceClient{cc}
 }
 
-func (c *authServiceClient) PostAuth(ctx context.Context, in *PostAuthRequest, opts ...grpc.CallOption) (*PostAuthResponse, error) {
+func (c *authServiceClient) Login(ctx context.Context, in *PostAuthRequest, opts ...grpc.CallOption) (*PostAuthResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(PostAuthResponse)
-	err := c.cc.Invoke(ctx, AuthService_PostAuth_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, AuthService_Login_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) RefreshToken(ctx context.Context, in *PostRefreshTokenRequest, opts ...grpc.CallOption) (*BackendToken, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BackendToken)
+	err := c.cc.Invoke(ctx, AuthService_RefreshToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +63,8 @@ func (c *authServiceClient) PostAuth(ctx context.Context, in *PostAuthRequest, o
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
 type AuthServiceServer interface {
-	PostAuth(context.Context, *PostAuthRequest) (*PostAuthResponse, error)
+	Login(context.Context, *PostAuthRequest) (*PostAuthResponse, error)
+	RefreshToken(context.Context, *PostRefreshTokenRequest) (*BackendToken, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -62,8 +75,11 @@ type AuthServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServiceServer struct{}
 
-func (UnimplementedAuthServiceServer) PostAuth(context.Context, *PostAuthRequest) (*PostAuthResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PostAuth not implemented")
+func (UnimplementedAuthServiceServer) Login(context.Context, *PostAuthRequest) (*PostAuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *PostRefreshTokenRequest) (*BackendToken, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 func (UnimplementedAuthServiceServer) testEmbeddedByValue()                     {}
@@ -86,20 +102,38 @@ func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
 	s.RegisterService(&AuthService_ServiceDesc, srv)
 }
 
-func _AuthService_PostAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PostAuthRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).PostAuth(ctx, in)
+		return srv.(AuthServiceServer).Login(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_PostAuth_FullMethodName,
+		FullMethod: AuthService_Login_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).PostAuth(ctx, req.(*PostAuthRequest))
+		return srv.(AuthServiceServer).Login(ctx, req.(*PostAuthRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostRefreshTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RefreshToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RefreshToken(ctx, req.(*PostRefreshTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -112,8 +146,12 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "PostAuth",
-			Handler:    _AuthService_PostAuth_Handler,
+			MethodName: "Login",
+			Handler:    _AuthService_Login_Handler,
+		},
+		{
+			MethodName: "RefreshToken",
+			Handler:    _AuthService_RefreshToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

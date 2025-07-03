@@ -4,6 +4,7 @@ go 1.24.1
 
 require (
 	github.com/99designs/gqlgen v0.17.73
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/segmentio/ksuid v1.0.4

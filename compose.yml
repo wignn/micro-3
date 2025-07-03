@@ -45,6 +45,20 @@ services:
       PORT: 8080
     restart: on-failure
 
+  auth:
+    build:
+      context: .
+      dockerfile: ./auth/app.dockerfile
+    depends_on:
+      - auth_db
+    environment:
+      DATABASE_URL: postgres://wignn:123456@auth_db/auth?sslmode=disable
+      PORT: 8080
+      ACCESS_SECRET_KEY: sivlia
+      REFRESH_SECRET_KEY: sivlia2
+    restart: on-failure
+
+
   graphql:
     build:
       context: .
@@ -56,11 +70,13 @@ services:
       - catalog
       - order
       - review
+      - auth
     environment:
       ACCOUNT_SERVICE_URL: account:8080
       CATALOG_SERVICE_URL: catalog:8080
       ORDER_SERVICE_URL: order:8080
       REVIEW_SERVICE_URL: review:8080
+      AUTH_SERVICE_URL: auth:8080
     restart: on-failure
 
   account_db:
@@ -74,6 +90,7 @@ services:
     volumes:
       - account_db_data:/var/lib/postgresql/data
     restart: unless-stopped
+  
 
   catalog_db:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
@@ -139,6 +156,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: unless-stopped
 
   connect:
     image: debezium/connect:2.6
@@ -159,8 +177,8 @@ services:
       INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       REST_ADVERTISED_HOST_NAME: connect
       PLUGIN_PATH: /kafka/connect,/usr/share/java,/usr/share/confluent-hub-components
+    restart: unless-stopped
     
-
   kafka-ui:
     image: provectuslabs/kafka-ui:v0.7.1
     container_name: kafka-ui
@@ -173,12 +191,11 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
-
+    restart: unless-stopped
 
 volumes:
   account_db_data:
   catalog_db_data:
   order_db_data:
-  clickhouse_data:
   review_db_data:
   auth_db_data:

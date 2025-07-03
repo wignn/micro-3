@@ -25,6 +25,21 @@ type Review {
   createdAt: Time!
 }
 
+type authResponse {
+  id: String!
+  email: String!
+  backendToken: Token!
+}
+
+type Token {
+  accessToken: String!
+  refreshToken: String!
+  expiresIn: Int!
+}
+
+
+
+
 type Order {
   id: String!
   createdAt: Time!
@@ -76,6 +91,11 @@ input OrderInput {
   products: [OrderProductInput!]!
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type DeleteProductResponse {
   deletedId: ID!
   success: Boolean!
@@ -88,6 +108,8 @@ type Mutation {
   createReview(review: ReviewInput!): Review
   createOrder(order: OrderInput!): Order
   DeleteProduct(id: String!): DeleteProductResponse!
+  login(account: LoginInput!): authResponse
+  refreshToken(refreshToken: String!): Token
 }
 
 type Query {
