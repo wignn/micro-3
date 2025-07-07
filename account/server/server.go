@@ -3,11 +3,13 @@ package server
 import (
 	"context"
 	"fmt"
+	"log"
+	"net"
+
 	"github.com/wignn/micro-3/account/genproto"
 	"github.com/wignn/micro-3/account/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"net"
 )
 
 type grpcServer struct {
@@ -26,8 +28,8 @@ func ListenGRPC(s service.AccountService, port int) error {
 	return serv.Serve(lis)
 }
 
-func (s *grpcServer) PostAccount(ctx context.Context, req *genproto.PostAccountRequest) (*genproto.PostAccountResponse, error) {
-	a, err := s.service.PostAccount(ctx, req.Name, req.Email, req.Password)
+func (s *grpcServer) PostAccount(c context.Context, req *genproto.PostAccountRequest) (*genproto.PostAccountResponse, error) {
+	a, err := s.service.PostAccount(c, req.Name, req.Email, req.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -41,8 +43,8 @@ func (s *grpcServer) PostAccount(ctx context.Context, req *genproto.PostAccountR
 	}, nil
 }
 
-func (s *grpcServer) GetAccount(ctx context.Context, req *genproto.GetAccountRequest) (*genproto.GetAccountResponse, error) {
-	a, err := s.service.GetAccount(ctx, req.Id)
+func (s *grpcServer) GetAccount(c context.Context, req *genproto.GetAccountRequest) (*genproto.GetAccountResponse, error) {
+	a, err := s.service.GetAccount(c, req.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +59,8 @@ func (s *grpcServer) GetAccount(ctx context.Context, req *genproto.GetAccountReq
 }
 
 
-func (s *grpcServer) GetAccounts(ctx context.Context, req *genproto.GetAccountsRequest) (*genproto.GetAccountsResponse, error) {
-	res, err := s.service.ListAccount(ctx, req.Skip, req.Take)
+func (s *grpcServer) GetAccounts(c context.Context, req *genproto.GetAccountsRequest) (*genproto.GetAccountsResponse, error) {
+	res, err := s.service.ListAccount(c, req.Skip, req.Take)
 	if err != nil {
 		return nil, err
 	}
@@ -73,5 +75,36 @@ func (s *grpcServer) GetAccounts(ctx context.Context, req *genproto.GetAccountsR
 
 	return &genproto.GetAccountsResponse{
 		Accounts: accounts,
+	}, nil
+}
+
+func (s *grpcServer) DeleteAccount(c context.Context, req *genproto.DeleteAccountRequest) (*genproto.DeleteAccountResponse, error) {
+	if err := s.service.DeleteAccount(c, req.Id); err != nil {
+		return nil, err
+	}
+
+	return &genproto.DeleteAccountResponse{
+		Message:   "Account deleted successfully",
+		Success:   true,
+		DeletedID: req.Id,
+	}, nil
+}
+
+
+func (s *grpcServer) EditAccount(c context.Context, req *genproto.EditAccountRequest) (*genproto.EditAccountResponse, error) {
+	a, err := s.service.EditAccount(c, req.Id, req.Name, req.Email, req.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Printf("Account with ID %s updated successfully", a.ID)
+	return &genproto.EditAccountResponse{
+		Message: "Account updated successfully",
+		Success: true,
+		Account: &genproto.Account{
+			Id:    a.ID,
+			Name:  a.Name,
+			Email: a.Email,
+		},
 	}, nil
 }

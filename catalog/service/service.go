@@ -14,6 +14,7 @@ type CatalogService interface {
 	GetProducts(c context.Context, skip uint64, take uint64) ([]*model.Product, error)
 	GetProductsByIDs(c context.Context, ids []string) ([]*model.Product, error)
 	SearchProducts(c context.Context, query string, skip uint64, take uint64) ([]*model.Product, error)
+	EditProduct(c context.Context, id, name, description string, price float64, image string) (*model.Product, error)
 	DeleteProduct(c context.Context, id string) error
 }
 
@@ -27,7 +28,7 @@ func NewCatalogService(r repository.CatalogRepository) CatalogService {
 
 func (s *catalogService) PostProduct(c context.Context, name, description string, price float64, image string) (*model.Product, error) {
 	p := &model.Product{
-		ID:  ksuid.New().String(),
+		ID:          ksuid.New().String(),
 		Name:        name,
 		Description: description,
 		Price:       price,
@@ -67,4 +68,11 @@ func (s *catalogService) DeleteProduct(c context.Context, id string) error {
 		return repository.ErrNotFound
 	}
 	return s.repository.DeletedProduct(c, id)
+}
+
+func (s *catalogService) EditProduct(c context.Context, id, name, description string, price float64, image string) (*model.Product, error) {
+	if id == "" {
+		return nil, repository.ErrNotFound
+	}
+	return s.repository.EditProduct(c, id, name, description, price, image)
 }

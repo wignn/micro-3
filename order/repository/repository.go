@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
+
 	"github.com/lib/pq"
 	"github.com/wignn/micro-3/order/model"
 )
@@ -11,6 +13,7 @@ type OrderRepository interface {
 	Close()
 	PutOrder(c context.Context, o *model.Order) error
 	GetOrdersForAccount(c context.Context, accountID string) ([]*model.Order, error)
+	DeleteOrder(c context.Context, id string) error
 }
 
 type postgresRepository struct {
@@ -156,4 +159,27 @@ func (r *postgresRepository) GetOrdersForAccount(c context.Context, accountID st
 	}
 
 	return orders, nil
+}
+
+
+func (r *postgresRepository) DeleteOrder(c context.Context, id string) error {
+	res, err := r.db.ExecContext(
+		c,
+		"DELETE FROM orders WHERE id = $1",
+		id,
+	)
+	if err != nil {
+		return err
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rows == 0 {
+		return fmt.Errorf("no order found with id %s", id)
+	}
+
+	return nil
 }

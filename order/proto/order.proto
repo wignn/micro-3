@@ -50,9 +50,21 @@ message GetOrdersForAccountResponse {
     repeated Order orders = 1;
 }
 
+message DeleteOrderRequest {
+    string id = 1;
+}
+
+message DeleteOrderResponse {
+    string deletedId = 1;
+    string message = 2;
+    bool success = 3;
+}
+
 service OrderService {
     rpc PostOrder (PostOrderRequest) returns (PostOrderResponse) {
     }
     rpc GetOrdersForAccount (GetOrdersForAccountRequest) returns (GetOrdersForAccountResponse) {
+    }
+    rpc DeleteOrder (DeleteOrderRequest) returns (DeleteOrderResponse) {
     }
 }

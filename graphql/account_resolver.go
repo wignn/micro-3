@@ -10,11 +10,11 @@ type accountResolver struct {
 	server *GraphQLServer
 }
 
-func (r *accountResolver) Orders(c context.Context, obj *Account) ([]*Order, error) {
+func (r *accountResolver) Orders(c context.Context, o *Account) ([]*Order, error) {
 	c, cancel := context.WithTimeout(c, 3*time.Second)
 	defer cancel()
 
-	orderList, err := r.server.orderClient.GetOrdersForAccount(c, obj.ID)
+	orderList, err := r.server.orderClient.GetOrdersForAccount(c, o.ID)
 	if err != nil {
 		log.Println(err)
 		return nil, err

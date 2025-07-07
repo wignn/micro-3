@@ -58,6 +58,20 @@ services:
       REFRESH_SECRET_KEY: sivlia2
     restart: on-failure
 
+  cart:
+    build:
+      context: .
+      dockerfile: ./cart/app.dockerfile
+    depends_on:
+      - cart_db
+    environment:
+      DATABASE_URL: postgres://wignn:123456@cart_db/cart?sslmode=disable
+      CATALOG_SERVICE_URL: catalog:8080
+      CART_SERVICE_URL: cart:8080
+      ACCOUNT_SERVICE_URL: account:8080
+      PORT: 8080
+    restart: on-failure
+
 
   graphql:
     build:
@@ -71,13 +85,27 @@ services:
       - order
       - review
       - auth
+      - cart
     environment:
       ACCOUNT_SERVICE_URL: account:8080
       CATALOG_SERVICE_URL: catalog:8080
       ORDER_SERVICE_URL: order:8080
       REVIEW_SERVICE_URL: review:8080
       AUTH_SERVICE_URL: auth:8080
+      CART_SERVICE_URL: cart:8080
     restart: on-failure
+
+  cart_db:
+    build:
+      context: ./cart
+      dockerfile: ./db.dockerfile
+    environment:
+      POSTGRES_DB: cart
+      POSTGRES_USER: wignn
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - cart_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   account_db:
     build:
@@ -135,6 +163,7 @@ services:
     volumes:
       - auth_db_data:/var/lib/postgresql/data
     restart: unless-stopped
+  
 
 
   zookeeper:
@@ -199,3 +228,4 @@ volumes:
   order_db_data:
   review_db_data:
   auth_db_data:
+  cart_db_data:

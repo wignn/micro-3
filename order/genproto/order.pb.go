@@ -369,6 +369,110 @@ func (x *GetOrdersForAccountResponse) GetOrders() []*Order {
 	return nil
 }
 
+type DeleteOrderRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteOrderRequest) Reset() {
+	*x = DeleteOrderRequest{}
+	mi := &file_order_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteOrderRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteOrderRequest) ProtoMessage() {}
+
+func (x *DeleteOrderRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_order_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteOrderRequest.ProtoReflect.Descriptor instead.
+func (*DeleteOrderRequest) Descriptor() ([]byte, []int) {
+	return file_order_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *DeleteOrderRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type DeleteOrderResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	DeletedId     string                 `protobuf:"bytes,1,opt,name=deletedId,proto3" json:"deletedId,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Success       bool                   `protobuf:"varint,3,opt,name=success,proto3" json:"success,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteOrderResponse) Reset() {
+	*x = DeleteOrderResponse{}
+	mi := &file_order_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteOrderResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteOrderResponse) ProtoMessage() {}
+
+func (x *DeleteOrderResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_order_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteOrderResponse.ProtoReflect.Descriptor instead.
+func (*DeleteOrderResponse) Descriptor() ([]byte, []int) {
+	return file_order_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *DeleteOrderResponse) GetDeletedId() string {
+	if x != nil {
+		return x.DeletedId
+	}
+	return ""
+}
+
+func (x *DeleteOrderResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *DeleteOrderResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
 type Order_OrderProduct struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -382,7 +486,7 @@ type Order_OrderProduct struct {
 
 func (x *Order_OrderProduct) Reset() {
 	*x = Order_OrderProduct{}
-	mi := &file_order_proto_msgTypes[7]
+	mi := &file_order_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -394,7 +498,7 @@ func (x *Order_OrderProduct) String() string {
 func (*Order_OrderProduct) ProtoMessage() {}
 
 func (x *Order_OrderProduct) ProtoReflect() protoreflect.Message {
-	mi := &file_order_proto_msgTypes[7]
+	mi := &file_order_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -455,7 +559,7 @@ type PostOrderRequest_OrderProduct struct {
 
 func (x *PostOrderRequest_OrderProduct) Reset() {
 	*x = PostOrderRequest_OrderProduct{}
-	mi := &file_order_proto_msgTypes[8]
+	mi := &file_order_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -467,7 +571,7 @@ func (x *PostOrderRequest_OrderProduct) String() string {
 func (*PostOrderRequest_OrderProduct) ProtoMessage() {}
 
 func (x *PostOrderRequest_OrderProduct) ProtoReflect() protoreflect.Message {
-	mi := &file_order_proto_msgTypes[8]
+	mi := &file_order_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -531,10 +635,17 @@ const file_order_proto_rawDesc = "" +
 	"\x1aGetOrdersForAccountRequest\x12\x1c\n" +
 	"\taccountId\x18\x01 \x01(\tR\taccountId\"F\n" +
 	"\x1bGetOrdersForAccountResponse\x12'\n" +
-	"\x06orders\x18\x01 \x03(\v2\x0f.genproto.OrderR\x06orders2\xbc\x01\n" +
+	"\x06orders\x18\x01 \x03(\v2\x0f.genproto.OrderR\x06orders\"$\n" +
+	"\x12DeleteOrderRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"g\n" +
+	"\x13DeleteOrderResponse\x12\x1c\n" +
+	"\tdeletedId\x18\x01 \x01(\tR\tdeletedId\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12\x18\n" +
+	"\asuccess\x18\x03 \x01(\bR\asuccess2\x8a\x02\n" +
 	"\fOrderService\x12F\n" +
 	"\tPostOrder\x12\x1a.genproto.PostOrderRequest\x1a\x1b.genproto.PostOrderResponse\"\x00\x12d\n" +
-	"\x13GetOrdersForAccount\x12$.genproto.GetOrdersForAccountRequest\x1a%.genproto.GetOrdersForAccountResponse\"\x00B)Z'github.com/wignn/micro-3/order/genprotob\x06proto3"
+	"\x13GetOrdersForAccount\x12$.genproto.GetOrdersForAccountRequest\x1a%.genproto.GetOrdersForAccountResponse\"\x00\x12L\n" +
+	"\vDeleteOrder\x12\x1c.genproto.DeleteOrderRequest\x1a\x1d.genproto.DeleteOrderResponse\"\x00B)Z'github.com/wignn/micro-3/order/genprotob\x06proto3"
 
 var (
 	file_order_proto_rawDescOnce sync.Once
@@ -548,7 +659,7 @@ func file_order_proto_rawDescGZIP() []byte {
 	return file_order_proto_rawDescData
 }
 
-var file_order_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_order_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_order_proto_goTypes = []any{
 	(*Order)(nil),                         // 0: genproto.Order
 	(*PostOrderRequest)(nil),              // 1: genproto.PostOrderRequest
@@ -557,24 +668,28 @@ var file_order_proto_goTypes = []any{
 	(*GetOrderResponse)(nil),              // 4: genproto.GetOrderResponse
 	(*GetOrdersForAccountRequest)(nil),    // 5: genproto.GetOrdersForAccountRequest
 	(*GetOrdersForAccountResponse)(nil),   // 6: genproto.GetOrdersForAccountResponse
-	(*Order_OrderProduct)(nil),            // 7: genproto.Order.OrderProduct
-	(*PostOrderRequest_OrderProduct)(nil), // 8: genproto.PostOrderRequest.OrderProduct
+	(*DeleteOrderRequest)(nil),            // 7: genproto.DeleteOrderRequest
+	(*DeleteOrderResponse)(nil),           // 8: genproto.DeleteOrderResponse
+	(*Order_OrderProduct)(nil),            // 9: genproto.Order.OrderProduct
+	(*PostOrderRequest_OrderProduct)(nil), // 10: genproto.PostOrderRequest.OrderProduct
 }
 var file_order_proto_depIdxs = []int32{
-	7, // 0: genproto.Order.products:type_name -> genproto.Order.OrderProduct
-	8, // 1: genproto.PostOrderRequest.products:type_name -> genproto.PostOrderRequest.OrderProduct
-	0, // 2: genproto.PostOrderResponse.order:type_name -> genproto.Order
-	0, // 3: genproto.GetOrderResponse.order:type_name -> genproto.Order
-	0, // 4: genproto.GetOrdersForAccountResponse.orders:type_name -> genproto.Order
-	1, // 5: genproto.OrderService.PostOrder:input_type -> genproto.PostOrderRequest
-	5, // 6: genproto.OrderService.GetOrdersForAccount:input_type -> genproto.GetOrdersForAccountRequest
-	2, // 7: genproto.OrderService.PostOrder:output_type -> genproto.PostOrderResponse
-	6, // 8: genproto.OrderService.GetOrdersForAccount:output_type -> genproto.GetOrdersForAccountResponse
-	7, // [7:9] is the sub-list for method output_type
-	5, // [5:7] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	9,  // 0: genproto.Order.products:type_name -> genproto.Order.OrderProduct
+	10, // 1: genproto.PostOrderRequest.products:type_name -> genproto.PostOrderRequest.OrderProduct
+	0,  // 2: genproto.PostOrderResponse.order:type_name -> genproto.Order
+	0,  // 3: genproto.GetOrderResponse.order:type_name -> genproto.Order
+	0,  // 4: genproto.GetOrdersForAccountResponse.orders:type_name -> genproto.Order
+	1,  // 5: genproto.OrderService.PostOrder:input_type -> genproto.PostOrderRequest
+	5,  // 6: genproto.OrderService.GetOrdersForAccount:input_type -> genproto.GetOrdersForAccountRequest
+	7,  // 7: genproto.OrderService.DeleteOrder:input_type -> genproto.DeleteOrderRequest
+	2,  // 8: genproto.OrderService.PostOrder:output_type -> genproto.PostOrderResponse
+	6,  // 9: genproto.OrderService.GetOrdersForAccount:output_type -> genproto.GetOrdersForAccountResponse
+	8,  // 10: genproto.OrderService.DeleteOrder:output_type -> genproto.DeleteOrderResponse
+	8,  // [8:11] is the sub-list for method output_type
+	5,  // [5:8] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_order_proto_init() }
@@ -588,7 +703,7 @@ func file_order_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_order_proto_rawDesc), len(file_order_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

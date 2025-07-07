@@ -37,8 +37,30 @@ message GetAccountsResponse {
     repeated Account accounts = 1;
 }
 
+message DeleteAccountRequest {
+    string id = 1;
+}
+message DeleteAccountResponse {
+    string message = 1;
+    bool success = 2;
+    string deletedID = 3;
+}
+
+message EditAccountRequest {
+    string id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+}
+
+message EditAccountResponse {
+    Account account = 3;
+}
+
 service AccountService {
     rpc PostAccount (PostAccountRequest) returns (PostAccountResponse);
     rpc GetAccount (GetAccountRequest) returns (GetAccountResponse);
     rpc GetAccounts (GetAccountsRequest) returns (GetAccountsResponse);
+    rpc EditAccount (EditAccountRequest) returns (EditAccountResponse);
+    rpc DeleteAccount (DeleteAccountRequest) returns (DeleteAccountResponse);
 }
