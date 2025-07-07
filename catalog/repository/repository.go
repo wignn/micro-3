@@ -20,6 +20,7 @@ type CatalogRepository interface {
 	GetProductByID(c context.Context, id string) (*model.Product, error)
 	ListProducts(c context.Context, skip uint64, take uint64) ([]*model.Product, error)
 	ListProductsWithIDs(ctx context.Context, ids []string) ([]*model.Product, error)
+	EditProduct(c context.Context, id string, name, description string, price float64, image string) (*model.Product, error)
 	SearchProducts(c context.Context, query string, skip uint64, take uint64) ([]*model.Product, error)
 	DeletedProduct(c context.Context, id string) error
 }
@@ -181,4 +182,23 @@ func (r *elasticRepository) DeletedProduct(c context.Context, id string) error {
 		return err
 	}
 	return nil
+}
+
+func (r *elasticRepository) EditProduct(c context.Context, id string, name, description string, price float64, image string) (*model.Product, error) {
+	_, err := r.client.Update().
+		Index("catalog").
+		Type("product").
+		Id(id).
+		Doc(model.ProductDocument{
+			Name:        name,
+			Description: description,
+			Price:       price,
+			Image:       image,
+		}).
+		Do(c)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return r.GetProductByID(c, id)
 }

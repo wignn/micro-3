@@ -192,3 +192,18 @@ func (s *grpcServer) GetOrdersForAccount(
 	return &genproto.GetOrdersForAccountResponse{Orders: orders}, nil
 }
 
+
+func (s *grpcServer) DeleteOrder(ctx context.Context, r *genproto.DeleteOrderRequest) (*genproto.DeleteOrderResponse, error) {
+	err := s.service.DeleteOrder(ctx, r.Id)
+	
+	if err != nil {
+		log.Println("Error deleting order: ", err)
+		return nil, errors.New("could not delete order")
+	}
+
+	return &genproto.DeleteOrderResponse{
+		DeletedId: r.Id,
+		Message:   "Order deleted successfully",
+		Success:   true,
+	}, nil
+}

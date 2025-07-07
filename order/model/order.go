@@ -18,3 +18,10 @@ type OrderedProduct struct {
 	Image       string
 	Quantity    uint32
 }
+
+
+type OrderDeleteResponse struct {
+	DeletedID string
+	Message   string
+	Success   bool
+}

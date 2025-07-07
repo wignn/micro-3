@@ -13,6 +13,7 @@ COPY order order
 COPY review review
 COPY graphql graphql
 COPY auth auth
+COPY cart cart 
 
 RUN GO111MODULE=on go build -mod vendor -o /go/bin/app ./graphql
 

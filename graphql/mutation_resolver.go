@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 	productModel "github.com/wignn/micro-3/order/model"
-	"log"
 	"time"
 )
 
@@ -22,29 +22,23 @@ func (r *mutationResolver) CreateAccount(c context.Context, in AccountInput) (*A
 
 	a, err := r.server.accountClient.PostAccount(c, in.Name, in.Email, in.Password)
 	if err != nil {
-		log.Println(err)
-		return nil, err
+		return nil, handleError("CreateAccount", err)
 	}
 
-	account := &Account{
+	return &Account{
 		ID:    a.ID,
 		Name:  a.Name,
 		Email: a.Email,
-	}
-
-	return account, nil
+	}, nil
 }
 
 func (r *mutationResolver) CreateProduct(c context.Context, in ProductInput) (*Product, error) {
 	c, cancel := context.WithTimeout(c, 3*time.Second)
-
 	defer cancel()
 
 	p, err := r.server.catalogClient.PostProduct(c, in.Name, in.Description, in.Price, in.Image)
-
 	if err != nil {
-		log.Println(err)
-		return nil, err
+		return nil, handleError("CreateProduct", err)
 	}
 
 	return &Product{
@@ -70,18 +64,17 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, in OrderInput) (*Ord
 			Quantity: uint32(p.Quantity),
 		})
 	}
+
 	o, err := r.server.orderClient.PostOrder(ctx, in.AccountID, products)
 	if err != nil {
-		log.Println(err)
-		return nil, err
+		return nil, handleError("CreateOrder.PostOrder", err)
 	}
 
 	var orderProducts []*OrderedProduct
 	for _, p := range o.Products {
-		productID := p.ID
-		prodDetail, err := r.server.catalogClient.GetProduct(ctx, productID)
+		prodDetail, err := r.server.catalogClient.GetProduct(ctx, p.ID)
 		if err != nil {
-			log.Printf("failed to get product %s: %v", productID, err)
+			handleError(fmt.Sprintf("GetProduct ID=%s", p.ID), err)
 			continue
 		}
 		orderProducts = append(orderProducts, &OrderedProduct{
@@ -108,11 +101,10 @@ func (r *mutationResolver) CreateReview(ctx context.Context, in ReviewInput) (*R
 	if in.Rating < 1 || in.Rating > 5 {
 		return nil, ErrInvalidParameter
 	}
-	review, err := r.server.reviewClient.PostReview(ctx, in.ProductID, in.AccountID, *in.Content, int32(in.Rating))
 
+	review, err := r.server.reviewClient.PostReview(ctx, in.ProductID, in.AccountID, *in.Content, int32(in.Rating))
 	if err != nil {
-		log.Println(err)
-		return nil, err
+		return nil, handleError("CreateReview", err)
 	}
 
 	return &Review{
@@ -123,31 +115,39 @@ func (r *mutationResolver) CreateReview(ctx context.Context, in ReviewInput) (*R
 	}, nil
 }
 
-func (r *mutationResolver) DeleteProduct(c context.Context, id string) (*DeleteProductResponse, error) {
-	result, err := r.server.catalogClient.DeleteProduct(c, id)
-
-	if err != nil {
-		log.Printf("failed to delete product: %+v\n", err)
-		message := "Failed to delete product"
-		return &DeleteProductResponse{Success: false, Message: &message, DeletedID: result.DeletedID}, err
-	}
-	return &DeleteProductResponse{Success: result.Success, Message: &result.Message, DeletedID: result.DeletedID}, nil
-}
-
-
-func (r *mutationResolver) Login(c context.Context, in LoginInput) (*AuthResponse, error) {
-	ctx, cancel := context.WithTimeout(c, 3*time.Second)
+func (r *mutationResolver) DeleteProduct(c context.Context, id string) (*DeleteResponse, error) {
+	c, cancel := context.WithTimeout(c, 3*time.Second)
 	defer cancel()
 
-	token, err := r.server.authClient.Login(ctx, in.Email, in.Password)
+	result, err := r.server.catalogClient.DeleteProduct(c, id)
 	if err != nil {
-		log.Println(err)
-		return nil, err
+		handleError("DeleteProduct", err)
+		return &DeleteResponse{
+			Success:   false,
+			Message:   "Failed to delete product",
+			DeletedID: id,
+		}, nil
+	}
+
+	return &DeleteResponse{
+		Success:   result.Success,
+		Message:   result.Message,
+		DeletedID: id,
+	}, nil
+}
+
+func (r *mutationResolver) Login(c context.Context, in LoginInput) (*AuthResponse, error) {
+	c, cancel := context.WithTimeout(c, 3*time.Second)
+	defer cancel()
+
+	token, err := r.server.authClient.Login(c, in.Email, in.Password)
+	if err != nil {
+		return nil, handleError("Login", err)
 	}
 
 	return &AuthResponse{
-		ID:           token.Auth.Id,
-		Email:        token.Auth.Email,
+		ID:    token.Auth.Id,
+		Email: token.Auth.Email,
 		BackendToken: &Token{
 			AccessToken:  token.Auth.Token.AccessToken,
 			RefreshToken: token.Auth.Token.RefreshToken,
@@ -156,20 +156,99 @@ func (r *mutationResolver) Login(c context.Context, in LoginInput) (*AuthRespons
 	}, nil
 }
 
-
 func (r *mutationResolver) RefreshToken(c context.Context, refreshToken string) (*Token, error) {
-	ctx, cancel := context.WithTimeout(c, 3*time.Second)
+	c, cancel := context.WithTimeout(c, 3*time.Second)
 	defer cancel()
 
-	newToken, err := r.server.authClient.RefreshToken(ctx, refreshToken)
+	newToken, err := r.server.authClient.RefreshToken(c, refreshToken)
 	if err != nil {
-		log.Println(err)
-		return nil, err
+		return nil, handleError("RefreshToken", err)
 	}
 
 	return &Token{
 		AccessToken:  newToken.AccessToken,
 		RefreshToken: newToken.RefreshToken,
 		ExpiresIn:    int(newToken.ExpiresAt),
+	}, nil
+}
+
+func (r *mutationResolver) EditProduct(c context.Context, id string, in ProductInput) (*Product, error) {
+	c, cancel := context.WithTimeout(c, 3*time.Second)
+	defer cancel()
+
+	p, err := r.server.catalogClient.EditProduct(c, id, in.Name, in.Description, in.Price, in.Image)
+	if err != nil {
+		return nil, handleError("EditProduct", err)
+	}
+
+	return &Product{
+		ID:          p.Id,
+		Name:        p.Name,
+		Description: p.Description,
+		Price:       p.Price,
+		Image:       p.Image,
+	}, nil
+}
+
+func (r *mutationResolver) DeleteAccount(c context.Context, id string) (*DeleteResponse, error) {
+	c, cancel := context.WithTimeout(c, 3*time.Second)
+	defer cancel()
+
+	p, err := r.server.accountClient.DeleteAccount(c, id)
+	if err != nil {
+		return nil, handleError("DeleteAccount", err)
+	}
+
+	return &DeleteResponse{
+		DeletedID: p.DeletedID,
+		Success:   p.Success,
+		Message:   p.Message,
+	}, nil
+}
+
+func (r *mutationResolver) EditAccount(c context.Context, id string, in EditeAccountInput) (*Account, error) {
+	c, cancel := context.WithTimeout(c, 3*time.Second)
+	defer cancel()
+
+	if in.Name == nil {
+		empty := ""
+		in.Name = &empty
+	}
+	if in.Email == nil {
+		empty := ""
+		in.Email = &empty
+	}
+	if in.Password == nil {
+		empty := ""
+		in.Password = &empty
+	}
+
+	a, err := r.server.accountClient.EditAccount(c, id, *in.Name, *in.Email, *in.Password)
+	if err != nil {
+		return nil, handleError("EditAccount", err)
+	}
+
+	return &Account{
+		ID:    a.ID,
+		Name:  a.Name,
+		Email: a.Email,
+	}, nil
+}
+
+func (r *mutationResolver) CreateCart(c context.Context, in CartInput) (*Cart, error) {
+	c, cancel := context.WithTimeout(c, 3*time.Second)
+	defer cancel()
+
+	cart, err := r.server.cartClient.PostCart(c, in.ProductID, in.AccountID, uint32(in.Quantity))
+	if err != nil {
+		return nil, handleError("AddToCart", err)
+	}
+
+	return &Cart{
+		ID:          cart.ID,
+		Quantity:    float64(cart.Quantity),
+		Name:        cart.Name,
+		Price:       cart.Price,
+		Description: cart.Description,
 	}, nil
 }

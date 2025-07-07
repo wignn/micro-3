@@ -14,17 +14,20 @@ type AppConfig struct {
 	OrderURL   string `envconfig:"ORDER_SERVICE_URL"`
 	ReviewURL  string `envconfig:"REVIEW_SERVICE_URL"`
 	AuthURL    string `envconfig:"AUTH_SERVICE_URL"`
+	CartURL    string `envconfig:"CART_SERVICE_URL"`
 }
 
 func main() {
 	var cfg AppConfig
 	
 	err := envconfig.Process("", &cfg)
+
 	if err != nil {
 		log.Fatalf("failed to process env config: %v", err)
 	}
 
-	s, err := NewGraphQLServer(cfg.AccountURL, cfg.CatalogURL, cfg.OrderURL, cfg.ReviewURL, cfg.AuthURL)
+	s, err := NewGraphQLServer(cfg.AccountURL, cfg.CatalogURL, cfg.OrderURL, cfg.ReviewURL, cfg.AuthURL, cfg.CartURL)
+
 	if err != nil {
 		log.Fatalf("failed to create GraphQL server: %v", err)
 	}

@@ -369,6 +369,238 @@ func (x *GetAccountsResponse) GetAccounts() []*Account {
 	return nil
 }
 
+type DeleteAccountRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteAccountRequest) Reset() {
+	*x = DeleteAccountRequest{}
+	mi := &file_account_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteAccountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAccountRequest) ProtoMessage() {}
+
+func (x *DeleteAccountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAccountRequest.ProtoReflect.Descriptor instead.
+func (*DeleteAccountRequest) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *DeleteAccountRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type DeleteAccountResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Success       bool                   `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
+	DeletedID     string                 `protobuf:"bytes,3,opt,name=deletedID,proto3" json:"deletedID,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteAccountResponse) Reset() {
+	*x = DeleteAccountResponse{}
+	mi := &file_account_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteAccountResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteAccountResponse) ProtoMessage() {}
+
+func (x *DeleteAccountResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteAccountResponse.ProtoReflect.Descriptor instead.
+func (*DeleteAccountResponse) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *DeleteAccountResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *DeleteAccountResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *DeleteAccountResponse) GetDeletedID() string {
+	if x != nil {
+		return x.DeletedID
+	}
+	return ""
+}
+
+type EditAccountRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"`
+	Password      string                 `protobuf:"bytes,4,opt,name=password,proto3" json:"password,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EditAccountRequest) Reset() {
+	*x = EditAccountRequest{}
+	mi := &file_account_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EditAccountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EditAccountRequest) ProtoMessage() {}
+
+func (x *EditAccountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EditAccountRequest.ProtoReflect.Descriptor instead.
+func (*EditAccountRequest) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *EditAccountRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *EditAccountRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *EditAccountRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *EditAccountRequest) GetPassword() string {
+	if x != nil {
+		return x.Password
+	}
+	return ""
+}
+
+type EditAccountResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Success       bool                   `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
+	Account       *Account               `protobuf:"bytes,3,opt,name=account,proto3" json:"account,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EditAccountResponse) Reset() {
+	*x = EditAccountResponse{}
+	mi := &file_account_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EditAccountResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EditAccountResponse) ProtoMessage() {}
+
+func (x *EditAccountResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_account_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EditAccountResponse.ProtoReflect.Descriptor instead.
+func (*EditAccountResponse) Descriptor() ([]byte, []int) {
+	return file_account_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *EditAccountResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *EditAccountResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *EditAccountResponse) GetAccount() *Account {
+	if x != nil {
+		return x.Account
+	}
+	return nil
+}
+
 var File_account_proto protoreflect.FileDescriptor
 
 const file_account_proto_rawDesc = "" +
@@ -392,12 +624,29 @@ const file_account_proto_rawDesc = "" +
 	"\x04skip\x18\x01 \x01(\x04R\x04skip\x12\x12\n" +
 	"\x04take\x18\x02 \x01(\x04R\x04take\"D\n" +
 	"\x13GetAccountsResponse\x12-\n" +
-	"\baccounts\x18\x01 \x03(\v2\x11.genproto.AccountR\baccounts2\xf1\x01\n" +
+	"\baccounts\x18\x01 \x03(\v2\x11.genproto.AccountR\baccounts\"&\n" +
+	"\x14DeleteAccountRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"i\n" +
+	"\x15DeleteAccountResponse\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x12\x18\n" +
+	"\asuccess\x18\x02 \x01(\bR\asuccess\x12\x1c\n" +
+	"\tdeletedID\x18\x03 \x01(\tR\tdeletedID\"j\n" +
+	"\x12EditAccountRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\x12\x1a\n" +
+	"\bpassword\x18\x04 \x01(\tR\bpassword\"v\n" +
+	"\x13EditAccountResponse\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x12\x18\n" +
+	"\asuccess\x18\x02 \x01(\bR\asuccess\x12+\n" +
+	"\aaccount\x18\x03 \x01(\v2\x11.genproto.AccountR\aaccount2\x8f\x03\n" +
 	"\x0eAccountService\x12J\n" +
 	"\vPostAccount\x12\x1c.genproto.PostAccountRequest\x1a\x1d.genproto.PostAccountResponse\x12G\n" +
 	"\n" +
 	"GetAccount\x12\x1b.genproto.GetAccountRequest\x1a\x1c.genproto.GetAccountResponse\x12J\n" +
-	"\vGetAccounts\x12\x1c.genproto.GetAccountsRequest\x1a\x1d.genproto.GetAccountsResponseB+Z)github.com/wignn/micro-3/account/genprotob\x06proto3"
+	"\vGetAccounts\x12\x1c.genproto.GetAccountsRequest\x1a\x1d.genproto.GetAccountsResponse\x12J\n" +
+	"\vEditAccount\x12\x1c.genproto.EditAccountRequest\x1a\x1d.genproto.EditAccountResponse\x12P\n" +
+	"\rDeleteAccount\x12\x1e.genproto.DeleteAccountRequest\x1a\x1f.genproto.DeleteAccountResponseB+Z)github.com/wignn/micro-3/account/genprotob\x06proto3"
 
 var (
 	file_account_proto_rawDescOnce sync.Once
@@ -411,31 +660,40 @@ func file_account_proto_rawDescGZIP() []byte {
 	return file_account_proto_rawDescData
 }
 
-var file_account_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_account_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_account_proto_goTypes = []any{
-	(*Account)(nil),             // 0: genproto.Account
-	(*PostAccountRequest)(nil),  // 1: genproto.PostAccountRequest
-	(*PostAccountResponse)(nil), // 2: genproto.PostAccountResponse
-	(*GetAccountRequest)(nil),   // 3: genproto.GetAccountRequest
-	(*GetAccountResponse)(nil),  // 4: genproto.GetAccountResponse
-	(*GetAccountsRequest)(nil),  // 5: genproto.GetAccountsRequest
-	(*GetAccountsResponse)(nil), // 6: genproto.GetAccountsResponse
+	(*Account)(nil),               // 0: genproto.Account
+	(*PostAccountRequest)(nil),    // 1: genproto.PostAccountRequest
+	(*PostAccountResponse)(nil),   // 2: genproto.PostAccountResponse
+	(*GetAccountRequest)(nil),     // 3: genproto.GetAccountRequest
+	(*GetAccountResponse)(nil),    // 4: genproto.GetAccountResponse
+	(*GetAccountsRequest)(nil),    // 5: genproto.GetAccountsRequest
+	(*GetAccountsResponse)(nil),   // 6: genproto.GetAccountsResponse
+	(*DeleteAccountRequest)(nil),  // 7: genproto.DeleteAccountRequest
+	(*DeleteAccountResponse)(nil), // 8: genproto.DeleteAccountResponse
+	(*EditAccountRequest)(nil),    // 9: genproto.EditAccountRequest
+	(*EditAccountResponse)(nil),   // 10: genproto.EditAccountResponse
 }
 var file_account_proto_depIdxs = []int32{
-	0, // 0: genproto.PostAccountResponse.account:type_name -> genproto.Account
-	0, // 1: genproto.GetAccountResponse.account:type_name -> genproto.Account
-	0, // 2: genproto.GetAccountsResponse.accounts:type_name -> genproto.Account
-	1, // 3: genproto.AccountService.PostAccount:input_type -> genproto.PostAccountRequest
-	3, // 4: genproto.AccountService.GetAccount:input_type -> genproto.GetAccountRequest
-	5, // 5: genproto.AccountService.GetAccounts:input_type -> genproto.GetAccountsRequest
-	2, // 6: genproto.AccountService.PostAccount:output_type -> genproto.PostAccountResponse
-	4, // 7: genproto.AccountService.GetAccount:output_type -> genproto.GetAccountResponse
-	6, // 8: genproto.AccountService.GetAccounts:output_type -> genproto.GetAccountsResponse
-	6, // [6:9] is the sub-list for method output_type
-	3, // [3:6] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	0,  // 0: genproto.PostAccountResponse.account:type_name -> genproto.Account
+	0,  // 1: genproto.GetAccountResponse.account:type_name -> genproto.Account
+	0,  // 2: genproto.GetAccountsResponse.accounts:type_name -> genproto.Account
+	0,  // 3: genproto.EditAccountResponse.account:type_name -> genproto.Account
+	1,  // 4: genproto.AccountService.PostAccount:input_type -> genproto.PostAccountRequest
+	3,  // 5: genproto.AccountService.GetAccount:input_type -> genproto.GetAccountRequest
+	5,  // 6: genproto.AccountService.GetAccounts:input_type -> genproto.GetAccountsRequest
+	9,  // 7: genproto.AccountService.EditAccount:input_type -> genproto.EditAccountRequest
+	7,  // 8: genproto.AccountService.DeleteAccount:input_type -> genproto.DeleteAccountRequest
+	2,  // 9: genproto.AccountService.PostAccount:output_type -> genproto.PostAccountResponse
+	4,  // 10: genproto.AccountService.GetAccount:output_type -> genproto.GetAccountResponse
+	6,  // 11: genproto.AccountService.GetAccounts:output_type -> genproto.GetAccountsResponse
+	10, // 12: genproto.AccountService.EditAccount:output_type -> genproto.EditAccountResponse
+	8,  // 13: genproto.AccountService.DeleteAccount:output_type -> genproto.DeleteAccountResponse
+	9,  // [9:14] is the sub-list for method output_type
+	4,  // [4:9] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_account_proto_init() }
@@ -449,7 +707,7 @@ func file_account_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_account_proto_rawDesc), len(file_account_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

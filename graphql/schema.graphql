@@ -7,7 +7,6 @@ type Account {
   orders: [Order!]!
 }
 
-
 type Product {
   id: String!
   name: String!
@@ -36,9 +35,6 @@ type Token {
   refreshToken: String!
   expiresIn: Int!
 }
-
-
-
 
 type Order {
   id: String!
@@ -74,6 +70,20 @@ input ProductInput {
   image: String!
 }
 
+input CartInput {
+  productId: String!
+  accountId: String!
+  quantity: Float!
+}
+
+type Cart {
+  id: String!
+  quantity: Float!
+  name: String!
+  price: Float!
+  description: String!
+}
+
 input ReviewInput {
   productId: String!
   accountId: String!
@@ -96,20 +106,32 @@ input LoginInput {
   password: String!
 }
 
-type DeleteProductResponse {
+type DeleteResponse {
   deletedId: ID!
   success: Boolean!
-  message: String
+  message: String!
 }
+
+
+input EditeAccountInput {
+  name: String
+  email: String
+  password: String
+}
+
 
 type Mutation {
   createAccount(account: AccountInput!): Account
   createProduct(product: ProductInput!): Product
   createReview(review: ReviewInput!): Review
   createOrder(order: OrderInput!): Order
-  DeleteProduct(id: String!): DeleteProductResponse!
+  deleteProduct(id: String!): DeleteResponse!
   login(account: LoginInput!): authResponse
   refreshToken(refreshToken: String!): Token
+  editProduct(id: String!, product: ProductInput!): Product
+  editAccount(id: String!, account: EditeAccountInput!): Account
+  deleteAccount(id: String!): DeleteResponse!
+  createCart(cart: CartInput!): Cart!
 }
 
 type Query {

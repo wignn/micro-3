@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package genproto;
+
+option go_package = "github.com/wignn/micro-3/cart/genproto";
+
+
+message Cart {
+    string id = 1;
+    bytes createdAt = 2;
+    string accountId = 3;
+    double totalPrice = 4;
+    repeated CartProduct products = 5;
+}
+
+
+message CartProduct {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    double price = 4;
+    uint32 quantity = 5;
+}
+
+message PostCartRequest {
+    string accountId = 1;
+    string productId = 2;
+    uint32 quantity = 3;
+}
+
+
+message PostCartResponse {
+    CartProduct CartProduct = 1;
+}
+
+message DeleteCartRequest {
+    string id = 1;
+}
+
+message DeleteCartResponse {
+    string deletedId = 1;
+    string message = 2;
+    bool success = 3;
+}
+
+message GetCartForAccountRequest {
+    string accountId = 1;
+}
+
+message GetCartForAccountResponse {
+    repeated Cart carts = 1;
+}
+
+
+message GetCartRequest {
+    string id = 1;
+}
+message GetCartResponse {
+    CartProduct CartProduct = 1;
+}
+
+service CartService {
+    rpc PostCart(PostCartRequest) returns (PostCartResponse);
+
+}

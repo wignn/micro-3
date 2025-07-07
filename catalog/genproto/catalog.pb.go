@@ -513,6 +513,82 @@ func (x *DeleteProductResponse) GetDeletedID() string {
 	return ""
 }
 
+type EditProductRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Price         float64                `protobuf:"fixed64,4,opt,name=price,proto3" json:"price,omitempty"`
+	Image         string                 `protobuf:"bytes,5,opt,name=image,proto3" json:"image,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EditProductRequest) Reset() {
+	*x = EditProductRequest{}
+	mi := &file_catalog_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EditProductRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EditProductRequest) ProtoMessage() {}
+
+func (x *EditProductRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_catalog_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EditProductRequest.ProtoReflect.Descriptor instead.
+func (*EditProductRequest) Descriptor() ([]byte, []int) {
+	return file_catalog_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *EditProductRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *EditProductRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *EditProductRequest) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *EditProductRequest) GetPrice() float64 {
+	if x != nil {
+		return x.Price
+	}
+	return 0
+}
+
+func (x *EditProductRequest) GetImage() string {
+	if x != nil {
+		return x.Image
+	}
+	return ""
+}
+
 var File_catalog_proto protoreflect.FileDescriptor
 
 const file_catalog_proto_rawDesc = "" +
@@ -547,12 +623,19 @@ const file_catalog_proto_rawDesc = "" +
 	"\x15DeleteProductResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12\x18\n" +
 	"\asuccess\x18\x02 \x01(\bR\asuccess\x12\x1c\n" +
-	"\tdeletedID\x18\x03 \x01(\tR\tdeletedID2\xc3\x02\n" +
+	"\tdeletedID\x18\x03 \x01(\tR\tdeletedID\"\x86\x01\n" +
+	"\x12EditProductRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x14\n" +
+	"\x05price\x18\x04 \x01(\x01R\x05price\x12\x14\n" +
+	"\x05image\x18\x05 \x01(\tR\x05image2\x8f\x03\n" +
 	"\x0eCatalogService\x12J\n" +
 	"\vPostProduct\x12\x1c.genproto.PostProductRequest\x1a\x1d.genproto.PostProductResponse\x12G\n" +
 	"\n" +
 	"GetProduct\x12\x1b.genproto.GetProductRequest\x1a\x1c.genproto.GetProductResponse\x12J\n" +
-	"\vGetProducts\x12\x1c.genproto.GetProductsRequest\x1a\x1d.genproto.GetProductsResponse\x12P\n" +
+	"\vGetProducts\x12\x1c.genproto.GetProductsRequest\x1a\x1d.genproto.GetProductsResponse\x12J\n" +
+	"\vEditProduct\x12\x1c.genproto.EditProductRequest\x1a\x1d.genproto.PostProductResponse\x12P\n" +
 	"\rDeleteProduct\x12\x1e.genproto.DeleteProductRequest\x1a\x1f.genproto.DeleteProductResponseB+Z)github.com/wignn/micro-3/catalog/genprotob\x06proto3"
 
 var (
@@ -567,7 +650,7 @@ func file_catalog_proto_rawDescGZIP() []byte {
 	return file_catalog_proto_rawDescData
 }
 
-var file_catalog_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_catalog_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_catalog_proto_goTypes = []any{
 	(*Product)(nil),               // 0: genproto.Product
 	(*PostProductRequest)(nil),    // 1: genproto.PostProductRequest
@@ -578,6 +661,7 @@ var file_catalog_proto_goTypes = []any{
 	(*DeleteProductRequest)(nil),  // 6: genproto.DeleteProductRequest
 	(*GetProductsResponse)(nil),   // 7: genproto.GetProductsResponse
 	(*DeleteProductResponse)(nil), // 8: genproto.DeleteProductResponse
+	(*EditProductRequest)(nil),    // 9: genproto.EditProductRequest
 }
 var file_catalog_proto_depIdxs = []int32{
 	0, // 0: genproto.PostProductResponse.product:type_name -> genproto.Product
@@ -586,13 +670,15 @@ var file_catalog_proto_depIdxs = []int32{
 	1, // 3: genproto.CatalogService.PostProduct:input_type -> genproto.PostProductRequest
 	3, // 4: genproto.CatalogService.GetProduct:input_type -> genproto.GetProductRequest
 	5, // 5: genproto.CatalogService.GetProducts:input_type -> genproto.GetProductsRequest
-	6, // 6: genproto.CatalogService.DeleteProduct:input_type -> genproto.DeleteProductRequest
-	2, // 7: genproto.CatalogService.PostProduct:output_type -> genproto.PostProductResponse
-	4, // 8: genproto.CatalogService.GetProduct:output_type -> genproto.GetProductResponse
-	7, // 9: genproto.CatalogService.GetProducts:output_type -> genproto.GetProductsResponse
-	8, // 10: genproto.CatalogService.DeleteProduct:output_type -> genproto.DeleteProductResponse
-	7, // [7:11] is the sub-list for method output_type
-	3, // [3:7] is the sub-list for method input_type
+	9, // 6: genproto.CatalogService.EditProduct:input_type -> genproto.EditProductRequest
+	6, // 7: genproto.CatalogService.DeleteProduct:input_type -> genproto.DeleteProductRequest
+	2, // 8: genproto.CatalogService.PostProduct:output_type -> genproto.PostProductResponse
+	4, // 9: genproto.CatalogService.GetProduct:output_type -> genproto.GetProductResponse
+	7, // 10: genproto.CatalogService.GetProducts:output_type -> genproto.GetProductsResponse
+	2, // 11: genproto.CatalogService.EditProduct:output_type -> genproto.PostProductResponse
+	8, // 12: genproto.CatalogService.DeleteProduct:output_type -> genproto.DeleteProductResponse
+	8, // [8:13] is the sub-list for method output_type
+	3, // [3:8] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name
@@ -609,7 +695,7 @@ func file_catalog_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_catalog_proto_rawDesc), len(file_catalog_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

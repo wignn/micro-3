@@ -12,6 +12,8 @@ type AccountService  interface {
 	PostAccount(c context.Context, name, email, password string) (*model.Account, error)
 	GetAccount(c context.Context, id string) (*model.Account, error)
 	ListAccount(c context.Context, skip uint64, take uint64) ([]*model.Account, error)
+	DeleteAccount(c context.Context, id string) error
+	EditAccount(c context.Context, id, name, email, password string) (*model.Account, error)
 }
 
 
@@ -66,4 +68,30 @@ func (s *accountService) ListAccount(c context.Context, skip uint64, take uint64
 	}
 
 	return accounts, nil
+}
+
+func (s *accountService) DeleteAccount(c context.Context, id string) error {
+	if id == "" {
+		return repository.ErrNotFound
+	}
+
+	return s.repository.DeleteAccount(c, id)
+}
+
+func (s *accountService) EditAccount(c context.Context, id, name, email, password string) (*model.Account, error) {
+	if id == "" {
+		return nil, repository.ErrNotFound
+	}
+	
+ 	r, err := s.repository.EditAccount(c , &model.Account{
+		ID:       id,
+		Name:     name,
+		Email:    email,
+		Password: password,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return r, nil
 }

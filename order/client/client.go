@@ -109,3 +109,16 @@ func (cl *OrderClient) GetOrdersForAccount(c context.Context, accountID string) 
 	return orders, nil
 }
 
+
+func (cl *OrderClient) DeleteOrder(c context.Context, id string) ( *model.OrderDeleteResponse, error) {
+	r ,err := cl.service.DeleteOrder(c, &genproto.DeleteOrderRequest{Id: id})
+	if err != nil {
+		log.Printf("failed to delete order with ID %s: %v\n", id, err)
+		return nil, err
+	}
+	return &model.OrderDeleteResponse{
+		DeletedID: r.DeletedId,
+		Message:   r.Message,
+		Success:   r.Success,
+	}, nil
+}

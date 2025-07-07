@@ -51,9 +51,18 @@ message DeleteProductResponse {
     string deletedID = 3;
 }
 
+message EditProductRequest {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    double price = 4;
+    string image = 5;
+}
+
 service CatalogService {
     rpc PostProduct (PostProductRequest) returns (PostProductResponse);
     rpc GetProduct (GetProductRequest) returns (GetProductResponse);
     rpc GetProducts (GetProductsRequest) returns (GetProductsResponse);
-    rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse); 
+    rpc EditProduct(EditProductRequest) returns (PostProductResponse);
+    rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse);
 }

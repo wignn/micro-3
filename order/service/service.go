@@ -12,6 +12,7 @@ import (
 type OrderService interface {
 	PostOrder(c context.Context, accountID string, products []model.OrderedProduct) (*model.Order, error)
 	GetOrdersForAccount(c context.Context, accountID string) ([]*model.Order, error)
+	DeleteOrder(c context.Context, id string) error
 }
 
 
@@ -54,4 +55,8 @@ func (s orderService) PostOrder(
 
 func (s orderService) GetOrdersForAccount(ctx context.Context, accountID string) ([]*model.Order, error) {
 	return s.repository.GetOrdersForAccount(ctx, accountID)
+}
+
+func (s *orderService) DeleteOrder(ctx context.Context, id string) error {
+	return s.repository.DeleteOrder(ctx, id)
 }

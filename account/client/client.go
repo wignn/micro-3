@@ -80,3 +80,32 @@ func (cl *AccountClient) GetAccounts(c context.Context, skip, take uint64) ([]*m
 
 	return accounts, nil
 }
+
+func (cl *AccountClient) DeleteAccount(c context.Context, id string) (*genproto.DeleteAccountResponse, error) {
+	r, err := cl.service.DeleteAccount(
+		c,
+		&genproto.DeleteAccountRequest{Id: id},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return r, nil
+}
+
+
+func (cl *AccountClient) EditAccount(c context.Context, id, name, email, password string) (*model.AccountResponse, error) {
+	r, err := cl.service.EditAccount(
+		c,
+		&genproto.EditAccountRequest{Id: id, Name: name, Email: email, Password: password},
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AccountResponse{
+		ID:   r.Account.Id,
+		Name: r.Account.Name,
+		Email: r.Account.Email,
+	}, nil
+}
