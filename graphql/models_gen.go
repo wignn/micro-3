@@ -12,20 +12,6 @@ type AccountInput struct {
 	Password string `json:"password"`
 }
 
-type Cart struct {
-	ID          string  `json:"id"`
-	Quantity    float64 `json:"quantity"`
-	Name        string  `json:"name"`
-	Price       float64 `json:"price"`
-	Description string  `json:"description"`
-}
-
-type CartInput struct {
-	ProductID string  `json:"productId"`
-	AccountID string  `json:"accountId"`
-	Quantity  float64 `json:"quantity"`
-}
-
 type DeleteResponse struct {
 	DeletedID string `json:"deletedId"`
 	Success   bool   `json:"success"`

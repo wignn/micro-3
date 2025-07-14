@@ -234,21 +234,3 @@ func (r *mutationResolver) EditAccount(c context.Context, id string, in EditeAcc
 		Email: a.Email,
 	}, nil
 }
-
-func (r *mutationResolver) CreateCart(c context.Context, in CartInput) (*Cart, error) {
-	c, cancel := context.WithTimeout(c, 3*time.Second)
-	defer cancel()
-
-	cart, err := r.server.cartClient.PostCart(c, in.ProductID, in.AccountID, uint32(in.Quantity))
-	if err != nil {
-		return nil, handleError("AddToCart", err)
-	}
-
-	return &Cart{
-		ID:          cart.ID,
-		Quantity:    float64(cart.Quantity),
-		Name:        cart.Name,
-		Price:       cart.Price,
-		Description: cart.Description,
-	}, nil
-}
