@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	ErrNotFound = errors.New("Entity not found")
+	ErrNotFound = errors.New("entity not found")
 )
 
 type CatalogRepository interface {
@@ -20,7 +20,9 @@ type CatalogRepository interface {
 	GetProductByID(c context.Context, id string) (*model.Product, error)
 	ListProducts(c context.Context, skip uint64, take uint64) ([]*model.Product, error)
 	ListProductsWithIDs(ctx context.Context, ids []string) ([]*model.Product, error)
+	EditProduct(c context.Context, id string, name, description string, price float64, image string) (*model.Product, error)
 	SearchProducts(c context.Context, query string, skip uint64, take uint64) ([]*model.Product, error)
+	DeletedProduct(c context.Context, id string) error
 }
 
 type elasticRepository struct {
@@ -42,7 +44,7 @@ func NewElasticRepository(url string) (CatalogRepository, error) {
 
 func (r *elasticRepository) Close() {}
 
-func (r *elasticRepository) PutProduct(ctx context.Context, p *model.Product) error {
+func (r *elasticRepository) PutProduct(c context.Context, p *model.Product) error {
 	_, err := r.client.Index().
 		Index("catalog").
 		Type("product").
@@ -53,7 +55,7 @@ func (r *elasticRepository) PutProduct(ctx context.Context, p *model.Product) er
 			Price:       p.Price,
 			Image:       p.Image,
 		}).
-		Do(ctx)
+		Do(c)
 	return err
 }
 
@@ -167,4 +169,36 @@ func (r *elasticRepository) SearchProducts(c context.Context, query string, skip
 		}
 	}
 	return products, nil
+}
+
+func (r *elasticRepository) DeletedProduct(c context.Context, id string) error {
+	_, err := r.client.Delete().
+		Index("catalog").
+		Type("product").
+		Id(id).
+		Do(c)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}
+
+func (r *elasticRepository) EditProduct(c context.Context, id string, name, description string, price float64, image string) (*model.Product, error) {
+	_, err := r.client.Update().
+		Index("catalog").
+		Type("product").
+		Id(id).
+		Doc(model.ProductDocument{
+			Name:        name,
+			Description: description,
+			Price:       price,
+			Image:       image,
+		}).
+		Do(c)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	return r.GetProductByID(c, id)
 }

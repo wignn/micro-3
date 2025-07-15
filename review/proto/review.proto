@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package genproto;
+
+option go_package = "github.com/wignn/micro-3/review/genproto";
+
+message Review {
+  string id = 1;
+  string productId= 2;
+  string accountId = 3;
+  string content = 4;
+  int32 rating = 5;
+  bytes createdAt = 6;
+
+}
+
+message ReviewIdRequest {
+  string id = 1;
+}
+
+message ProductIdRequest {
+  string id = 1;
+  uint64 skip = 2;
+  uint64 take = 3;
+}
+
+message PostReviewRequest {
+  string productId = 1;
+  string accountId = 2;
+  string content = 3;
+  int32 rating = 4;
+}
+
+message ReviewResponse {
+  Review review = 1;
+}
+
+message ReviewListResponse {
+  repeated Review reviews = 1;
+}
+
+service ReviewService {
+  rpc PostReview(PostReviewRequest) returns (ReviewResponse);
+  rpc GetReview(ReviewIdRequest) returns (Review);
+  rpc GetReviewByProductAndUser(ProductIdRequest) returns (ReviewListResponse);
+}

@@ -18,11 +18,10 @@ type Config struct {
 
 func main() {
 	var cfg Config
-
+	fmt.Println("Starting Account Service...")
 	if err := envconfig.Process("", &cfg); err != nil {
 		log.Fatal("Failed to process environment variables:", err)
 	}
-	fmt.Println("Starting Account Service...", cfg.PORT)
 
 	var r repository.AccountRepository
 
@@ -34,6 +33,7 @@ func main() {
 		}
 		return nil
 	})
+	
 	defer r.Close()
 
 	log.Println("listening on port", cfg.PORT)

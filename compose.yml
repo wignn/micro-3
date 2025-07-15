@@ -34,6 +34,31 @@ services:
       PORT: 8080
     restart: on-failure
 
+  review:
+    build:
+      context: .
+      dockerfile: ./review/app.dockerfile
+    depends_on:
+      - review_db
+    environment:
+      DATABASE_URL: postgres://wignn:123456@review_db/review?sslmode=disable
+      PORT: 8080
+    restart: on-failure
+
+  auth:
+    build:
+      context: .
+      dockerfile: ./auth/app.dockerfile
+    depends_on:
+      - auth_db
+    environment:
+      DATABASE_URL: postgres://wignn:123456@auth_db/auth?sslmode=disable
+      PORT: 8080
+      ACCESS_SECRET_KEY: sivlia
+      REFRESH_SECRET_KEY: sivlia2
+    restart: on-failure
+
+
   graphql:
     build:
       context: .
@@ -43,11 +68,19 @@ services:
     depends_on:
       - account
       - catalog
+      - order
+      - review
+      - auth
+      - cart
     environment:
       ACCOUNT_SERVICE_URL: account:8080
       CATALOG_SERVICE_URL: catalog:8080
       ORDER_SERVICE_URL: order:8080
+      REVIEW_SERVICE_URL: review:8080
+      AUTH_SERVICE_URL: auth:8080
+      CART_SERVICE_URL: cart:8080
     restart: on-failure
+
 
   account_db:
     build:
@@ -60,6 +93,7 @@ services:
     volumes:
       - account_db_data:/var/lib/postgresql/data
     restart: unless-stopped
+  
 
   catalog_db:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
@@ -81,10 +115,92 @@ services:
       - order_db_data:/var/lib/postgresql/data  
     restart: unless-stopped
 
+  review_db:
+    build: 
+      context: ./review
+      dockerfile: ./db.dockerfile
+    environment:
+      POSTGRES_DB: review
+      POSTGRES_USER: wignn
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - review_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  auth_db:
+    build:
+      context: ./auth
+      dockerfile: ./db.dockerfile
+    environment:
+      POSTGRES_DB: auth
+      POSTGRES_USER: wignn
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - auth_db_data:/var/lib/postgresql/data
+    restart: unless-stopped
   
+
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: unless-stopped
+
+  connect:
+    image: debezium/connect:2.6
+    depends_on:
+      - kafka
+      - zookeeper
+    ports:
+      - 8083:8083
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: connect-cluster
+      CONFIG_STORAGE_TOPIC: connect-configs
+      OFFSET_STORAGE_TOPIC: connect-offsets
+      STATUS_STORAGE_TOPIC: connect-status
+      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      REST_ADVERTISED_HOST_NAME: connect
+      PLUGIN_PATH: /kafka/connect,/usr/share/java,/usr/share/confluent-hub-components
+    restart: unless-stopped
+    
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.1
+    container_name: kafka-ui
+    ports:
+      - 4000:8080
+    depends_on:
+      - kafka
+      - zookeeper
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    restart: unless-stopped
 
 volumes:
   account_db_data:
   catalog_db_data:
   order_db_data:
-  clickhouse_data:
+  review_db_data:
+  auth_db_data:
+  cart_db_data:

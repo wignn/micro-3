@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package genproto;
+
+option go_package = "github.com/wignn/micro-3/auth/genproto";
+
+message Auth {
+    string id = 1;
+    string email = 2;
+    BackendToken token = 3;
+}
+
+message BackendToken {
+    string accessToken = 1;
+    string refreshToken = 2;
+    uint64 expiresAt = 3;
+}
+
+message PostAuthRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message PostRefreshTokenRequest {
+    string refreshToken = 1;
+}
+
+message PostAuthResponse {
+    Auth auth = 1;
+}
+
+service AuthService {
+    rpc Login(PostAuthRequest) returns (PostAuthResponse);
+    rpc RefreshToken(PostRefreshTokenRequest) returns (BackendToken);
+}

@@ -19,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	CatalogService_PostProduct_FullMethodName = "/genproto.CatalogService/PostProduct"
-	CatalogService_GetProduct_FullMethodName  = "/genproto.CatalogService/GetProduct"
-	CatalogService_GetProducts_FullMethodName = "/genproto.CatalogService/GetProducts"
+	CatalogService_PostProduct_FullMethodName   = "/genproto.CatalogService/PostProduct"
+	CatalogService_GetProduct_FullMethodName    = "/genproto.CatalogService/GetProduct"
+	CatalogService_GetProducts_FullMethodName   = "/genproto.CatalogService/GetProducts"
+	CatalogService_EditProduct_FullMethodName   = "/genproto.CatalogService/EditProduct"
+	CatalogService_DeleteProduct_FullMethodName = "/genproto.CatalogService/DeleteProduct"
 )
 
 // CatalogServiceClient is the client API for CatalogService service.
@@ -31,6 +33,8 @@ type CatalogServiceClient interface {
 	PostProduct(ctx context.Context, in *PostProductRequest, opts ...grpc.CallOption) (*PostProductResponse, error)
 	GetProduct(ctx context.Context, in *GetProductRequest, opts ...grpc.CallOption) (*GetProductResponse, error)
 	GetProducts(ctx context.Context, in *GetProductsRequest, opts ...grpc.CallOption) (*GetProductsResponse, error)
+	EditProduct(ctx context.Context, in *EditProductRequest, opts ...grpc.CallOption) (*PostProductResponse, error)
+	DeleteProduct(ctx context.Context, in *DeleteProductRequest, opts ...grpc.CallOption) (*DeleteProductResponse, error)
 }
 
 type catalogServiceClient struct {
@@ -71,6 +75,26 @@ func (c *catalogServiceClient) GetProducts(ctx context.Context, in *GetProductsR
 	return out, nil
 }
 
+func (c *catalogServiceClient) EditProduct(ctx context.Context, in *EditProductRequest, opts ...grpc.CallOption) (*PostProductResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PostProductResponse)
+	err := c.cc.Invoke(ctx, CatalogService_EditProduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *catalogServiceClient) DeleteProduct(ctx context.Context, in *DeleteProductRequest, opts ...grpc.CallOption) (*DeleteProductResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteProductResponse)
+	err := c.cc.Invoke(ctx, CatalogService_DeleteProduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CatalogServiceServer is the server API for CatalogService service.
 // All implementations must embed UnimplementedCatalogServiceServer
 // for forward compatibility.
@@ -78,6 +102,8 @@ type CatalogServiceServer interface {
 	PostProduct(context.Context, *PostProductRequest) (*PostProductResponse, error)
 	GetProduct(context.Context, *GetProductRequest) (*GetProductResponse, error)
 	GetProducts(context.Context, *GetProductsRequest) (*GetProductsResponse, error)
+	EditProduct(context.Context, *EditProductRequest) (*PostProductResponse, error)
+	DeleteProduct(context.Context, *DeleteProductRequest) (*DeleteProductResponse, error)
 	mustEmbedUnimplementedCatalogServiceServer()
 }
 
@@ -96,6 +122,12 @@ func (UnimplementedCatalogServiceServer) GetProduct(context.Context, *GetProduct
 }
 func (UnimplementedCatalogServiceServer) GetProducts(context.Context, *GetProductsRequest) (*GetProductsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetProducts not implemented")
+}
+func (UnimplementedCatalogServiceServer) EditProduct(context.Context, *EditProductRequest) (*PostProductResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EditProduct not implemented")
+}
+func (UnimplementedCatalogServiceServer) DeleteProduct(context.Context, *DeleteProductRequest) (*DeleteProductResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteProduct not implemented")
 }
 func (UnimplementedCatalogServiceServer) mustEmbedUnimplementedCatalogServiceServer() {}
 func (UnimplementedCatalogServiceServer) testEmbeddedByValue()                        {}
@@ -172,6 +204,42 @@ func _CatalogService_GetProducts_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CatalogService_EditProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditProductRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).EditProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CatalogService_EditProduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).EditProduct(ctx, req.(*EditProductRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _CatalogService_DeleteProduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteProductRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CatalogServiceServer).DeleteProduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CatalogService_DeleteProduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CatalogServiceServer).DeleteProduct(ctx, req.(*DeleteProductRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CatalogService_ServiceDesc is the grpc.ServiceDesc for CatalogService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +258,14 @@ var CatalogService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetProducts",
 			Handler:    _CatalogService_GetProducts_Handler,
+		},
+		{
+			MethodName: "EditProduct",
+			Handler:    _CatalogService_EditProduct_Handler,
+		},
+		{
+			MethodName: "DeleteProduct",
+			Handler:    _CatalogService_DeleteProduct_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

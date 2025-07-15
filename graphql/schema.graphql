@@ -13,7 +13,27 @@ type Product {
   description: String!
   price: Float!
   image: String!
-  status: String!
+}
+
+type Review {
+  id: String!
+  content: String
+  rating: Int!
+  Account: Account!
+  Product: Product!
+  createdAt: Time!
+}
+
+type authResponse {
+  id: String!
+  email: String!
+  backendToken: Token!
+}
+
+type Token {
+  accessToken: String!
+  refreshToken: String!
+  expiresIn: Int!
 }
 
 type Order {
@@ -50,6 +70,13 @@ input ProductInput {
   image: String!
 }
 
+input ReviewInput {
+  productId: String!
+  accountId: String!
+  content: String
+  rating: Int!  
+}
+
 input OrderProductInput {
   id: String!
   quantity: Int!
@@ -60,13 +87,40 @@ input OrderInput {
   products: [OrderProductInput!]!
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type DeleteResponse {
+  deletedId: ID!
+  success: Boolean!
+  message: String!
+}
+
+
+input EditeAccountInput {
+  name: String
+  email: String
+  password: String
+}
+
+
 type Mutation {
   createAccount(account: AccountInput!): Account
   createProduct(product: ProductInput!): Product
+  createReview(review: ReviewInput!): Review
   createOrder(order: OrderInput!): Order
+  deleteProduct(id: String!): DeleteResponse!
+  login(account: LoginInput!): authResponse
+  refreshToken(refreshToken: String!): Token
+  editProduct(id: String!, product: ProductInput!): Product
+  editAccount(id: String!, account: EditeAccountInput!): Account
+  deleteAccount(id: String!): DeleteResponse!
 }
 
 type Query {
   accounts(pagination: PaginationInput, id: String): [Account!]!
   products(pagination: PaginationInput, query: String, id: String): [Product!]!
+  reviews(pagination: PaginationInput, id: String): [Review!]!
 }

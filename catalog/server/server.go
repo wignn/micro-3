@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-
 	"github.com/wignn/micro-3/catalog/genproto"
 	"github.com/wignn/micro-3/catalog/model"
 	"github.com/wignn/micro-3/catalog/service"
@@ -50,6 +49,7 @@ func (s *grpcServer) GetProduct(c context.Context, r *genproto.GetProductRequest
 		log.Println(err)
 		return nil, err
 	}
+	
 	return &genproto.GetProductResponse{
 		Product: &genproto.Product{
 			Id:          p.ID,
@@ -91,4 +91,33 @@ func (s *grpcServer) GetProducts(c context.Context, r *genproto.GetProductsReque
 		)
 	}
 	return &genproto.GetProductsResponse{Products: products}, nil
+}
+
+func (s *grpcServer) EditProduct(c context.Context, r *genproto.EditProductRequest) (*genproto.PostProductResponse, error) {
+	p, err := s.service.EditProduct(c, r.Id, r.Name, r.Description, r.Price, r.Image)
+	if err != nil {
+		log.Println("failed to edit product:", err)
+		return nil, err 
+}
+	return &genproto.PostProductResponse{Product: &genproto.Product{
+		Id:          p.ID,
+		Name:        p.Name,
+		Description: p.Description,
+		Price:       p.Price,
+		Image:       p.Image,
+	}}, nil
+}
+
+func (s *grpcServer) DeleteProduct(c context.Context, r *genproto.DeleteProductRequest) (*genproto.DeleteProductResponse, error) {
+	err := s.service.DeleteProduct(c, r.Id)
+	if err != nil {
+		log.Printf("failed to delete product with ID %s: %v\n", r.Id, err)
+		return nil,  err
+	}
+
+	return &genproto.DeleteProductResponse{
+		DeletedID: r.Id,
+		Message:   fmt.Sprintf("Product with ID %s deleted successfully", r.Id),
+		Success:   true,
+	}, nil
 }

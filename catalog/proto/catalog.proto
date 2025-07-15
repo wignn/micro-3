@@ -4,7 +4,6 @@ package genproto;
 
 option go_package = "github.com/wignn/micro-3/catalog/genproto";
 
-
 message Product {
     string id = 1;
     string name = 2;
@@ -39,15 +38,31 @@ message GetProductsRequest {
     string query = 4;
 }
 
+message DeleteProductRequest {
+    string id = 1;
+}
+
 message GetProductsResponse {
     repeated Product products = 1;
 }
+message DeleteProductResponse {
+    string message = 1;
+    bool success = 2;
+    string deletedID = 3;
+}
+
+message EditProductRequest {
+    string id = 1;
+    string name = 2;
+    string description = 3;
+    double price = 4;
+    string image = 5;
+}
 
 service CatalogService {
-    rpc PostProduct (PostProductRequest) returns (PostProductResponse) {
-    }
-    rpc GetProduct (GetProductRequest) returns (GetProductResponse) {
-    }
-    rpc GetProducts (GetProductsRequest) returns (GetProductsResponse) {
-    }
+    rpc PostProduct (PostProductRequest) returns (PostProductResponse);
+    rpc GetProduct (GetProductRequest) returns (GetProductResponse);
+    rpc GetProducts (GetProductsRequest) returns (GetProductsResponse);
+    rpc EditProduct(EditProductRequest) returns (PostProductResponse);
+    rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse);
 }

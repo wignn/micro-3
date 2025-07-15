@@ -4,3 +4,5 @@ CREATE TABLE IF NOT EXISTS accounts (
   email VARCHAR(64) NOT NULL unique,
   password VARCHAR(64) NOT NULL
 );
+
+ALTER TABLE accounts REPLICA IDENTITY FULL;
