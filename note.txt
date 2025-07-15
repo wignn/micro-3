@@ -1,0 +1,80 @@
+1. Registrasi dan Login
+1.1 Otentikasi Pengguna:
+
+Membuat fungsi registrasi pengguna baru dengan menyimpan data di tabel accounts.
+
+Mengembangkan fungsi login pengguna dengan memverifikasi kredensial terhadap tabel accounts.
+
+Menerapkan mekanisme sesi/token untuk menjaga status login pengguna.
+
+2. Fitur Produk & Review
+2.1 Lihat Produk:
+
+Membuat halaman untuk menampilkan daftar semua produk dari tabel products.
+
+Mengembangkan fitur pencarian dan/atau filter (jika diperlukan) untuk daftar produk.
+
+2.2 Detail Produk + Review:
+
+Membuat halaman detail produk yang menampilkan informasi lengkap dari tabel products.
+
+Menampilkan semua ulasan (review) terkait produk dari tabel reviews di halaman detail produk.
+
+2.3 Tambah Review Produk:
+
+Membuat formulir untuk pengguna agar dapat memberikan ulasan (rating dan komentar) untuk produk.
+
+Menerapkan validasi bahwa pengguna harus sudah melakukan pembelian produk tersebut sebelum bisa memberikan ulasan.
+
+Menyimpan ulasan baru ke dalam tabel reviews.
+
+3. Fitur Pengguna (User/Customer)
+3.1 Buat Pesanan (Checkout):
+
+Mengembangkan alur checkout yang memungkinkan pengguna memesan satu atau lebih produk.
+
+Menyimpan detail pesanan ke tabel orders.
+
+Menyimpan detail produk yang dipesan dalam pesanan tersebut ke tabel order_products.
+
+3.2 Lihat Riwayat Pesanan:
+
+Membuat halaman untuk menampilkan daftar semua pesanan yang pernah dibuat oleh pengguna yang sedang login.
+
+Menampilkan detail setiap pesanan (produk apa saja yang dibeli) dari tabel order_products.
+
+3.3 Ubah Profil:
+
+Membuat halaman atau formulir untuk pengguna mengubah nama dan/atau email mereka.
+
+Memperbarui data pengguna di tabel accounts.
+
+4. Fitur Admin
+4.1 Manajemen Produk:
+
+4.1.1 Tambah Produk: Membuat formulir untuk menambahkan produk baru ke tabel products.
+
+4.1.2 Edit Produk: Mengembangkan fungsi untuk mengedit detail produk yang sudah ada di tabel products.
+
+4.1.3 Hapus Produk: Membuat fungsi untuk menghapus produk dari tabel products.
+
+4.1.4 Upload Gambar Produk: Menerapkan fungsionalitas upload gambar untuk setiap produk.
+
+4.2 Lihat Semua Pesanan:
+
+Membuat halaman admin untuk menampilkan semua pesanan yang masuk dari semua pengguna.
+
+Menampilkan detail lengkap setiap pesanan, termasuk produk-produk di dalamnya.
+
+4.3 Manajemen Review:
+
+Membuat halaman admin untuk melihat semua ulasan yang diberikan oleh pengguna.
+
+Mengembangkan fungsi untuk menghapus ulasan yang tidak sesuai atau tidak relevan.
+
+4.4 Laporan Penjualan:
+
+Membuat laporan yang menampilkan total transaksi (pendapatan) dari tabel orders.
+
+Menampilkan jumlah total pesanan yang telah dibuat dari tabel orders.
+
