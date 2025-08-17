@@ -1,17 +1,19 @@
 {
-    "connector.class": "io.debezium.connector.jdbc.JdbcSinkConnector",
-    "tasks.max": "1",
-    "topics": "account.public.accounts",
-    "connection.url": "jdbc:postgresql://auth_db:5432/auth",
-    "connection.username": "wignn",
-    "connection.password": "123456",
-    "insert.mode": "upsert",
-    "primary.key.mode": "record_key",
-    "primary.key.fields": "id",
-    "delete.enabled": "true",
-    "transforms": "unwrap",
-    "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
-    "transforms.unwrap.drop.tombstones": "true",
-    "dialect.name": "PostgreSql",
-    "table.name.format": "accounts"
-}
+    "name": "account-source",
+    "config": {
+      "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+      "plugin.name": "pgoutput",
+      "database.hostname": "account_db",
+      "database.port": "5432",
+      "database.user": "wignn",
+      "database.password": "123456",
+      "database.dbname": "account",
+      "topic.prefix": "account",
+      "table.include.list": "public.accounts",
+      "slot.name": "account_slot",
+      "publication.autocreate.mode": "filtered",
+      "database.history.kafka.bootstrap.servers": "kafka:9092",
+      "database.history.kafka.topic": "schema-changes.account",
+      "include.schema.changes": "false"
+    }
+  }

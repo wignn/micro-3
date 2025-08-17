@@ -25,70 +25,249 @@
 
 ## Overview
 
-**Micro-3** is a microservices architecture built using **Go**, leveraging **gRPC** for internal service communication and **GraphQL** as an external API gateway. The system is backed by **PostgreSQL** and **Elasticsearch** for data storage, and integrates **Kafka + Debezium** for real-time *Change Data Capture (CDC)* across services such as `account` and `auth`.
+Micro-3 is a polyglot microservices system written in Go. Services communicate internally via gRPC and expose a unified public API through a GraphQL gateway. Data is stored in PostgreSQL and Elasticsearch. Kafka + Debezium enables CDC to stream data changes (for example from Account to Auth).
 
-### Core Modules
+### Core modules
 
-- **Account Service**: Handles user registration and profile management.
-- **Authentication Service**: Handles login, authentication, and JWT-based authorization.
-- **Catalog Service**: Provides available product or item data.
-- **Order Service**: Manages order processing and delivery status.
-- **Review Service**: Collects and manages user reviews.
-- **GraphQL Gateway**: Public API interface to access all services.
-- **Kafka Integration**: Facilitates service-to-service communication and data syncing.
-- **Real-time CDC**: Enables database synchronization using Kafka + Debezium.
-
----
-
-## Technology Stack
-
-| Component         | Technology              |
-|------------------|--------------------------|
-| Language          | Go                      |
-| Communication     | gRPC, GraphQL           |
-| Database          | PostgreSQL, Elasticsearch |
-| CDC               | Kafka + Debezium        |
-| Containerization  | Docker + Docker Compose |
-| Infrastructure    | Makefile, Dockerfile    |
+- Account: user registration and profile
+- Auth: login and JWT token issuance
+- Catalog: product catalog (Elasticsearch)
+- Order: order placement and pricing
+- Review: product reviews
+- GraphQL Gateway: single entry point for clients
+- Kafka + Debezium: CDC and async integration
 
 ---
 
-## Project Structure
+## Services and ports
 
-```
+- GraphQL gateway: <http://localhost:8000> (Playground at /playground, API at /graphql)
+- Kafka UI: <http://localhost:4000>
+- Kafka Connect REST: <http://localhost:8083>
+- Kafka broker: localhost:9092 (inside Docker network: kafka:9092)
+- Zookeeper: localhost:2181
+
+Note: gRPC services (account, auth, catalog, order, review) listen on port 8080 inside the Docker network and aren’t exposed directly. Access them through the GraphQL gateway.
+
+---
+
+## Project structure
+
+```text
 micro-3/
-├── account/        # User account management
-├── auth/           # Authentication and authorization
-├── catalog/        # Product catalog service
-├── order/          # Order processing
-├── review/         # Review system
-├── graphql/        # GraphQL API gateway
-├── kafka/          # Kafka & Debezium configuration
-├── compose.yml     # Docker Compose definition
-├── go.mod          # Go module definition
-├── go.sum          # Go dependencies checksum
-└── README.md       # Project documentation
+├── account/    ── gRPC service + Postgres
+├── auth/       ── gRPC service + Postgres
+├── catalog/    ── gRPC service + Elasticsearch
+├── order/      ── gRPC service + Postgres
+├── review/     ── gRPC service + Postgres
+├── graphql/    ── GraphQL gateway (gqlgen)
+├── kafka/      ── Debezium/Kafka configs
+├── compose.yml ── Docker Compose stack
+└── vendor/     ── vendored dependencies
 ```
 
 ---
 
-## Getting Started
+## Quick start
 
-### 1. Clone the Repository
+Prerequisites: Docker Desktop (Compose v2), ~4GB RAM available for containers.
 
-```bash
+1. Clone
+
+```powershell
 git clone https://github.com/wignn/micro-3.git
 cd micro-3
 ```
 
-### 2. Build and Start All Services
+1. Start the stack
 
-```bash
+```powershell
 docker compose up --build -d
 ```
 
-### 3. Verify Running Containers
+1. Check status
 
-```bash
+```powershell
 docker compose ps
 ```
+
+1. Open the GraphQL Playground
+
+- <http://localhost:8000/playground> (queries go to /graphql)
+
+---
+
+## GraphQL usage
+
+- Endpoint: <http://localhost:8000/graphql>
+- Playground: <http://localhost:8000/playground>
+
+Example queries
+
+Query accounts
+
+```graphql
+query {
+  accounts(pagination: { skip: 0, take: 10 }) {
+    id
+    name
+    email
+  }
+}
+```
+
+Search products
+
+```graphql
+query {
+  products(pagination: { skip: 0, take: 12 }, query: "laptop") {
+    id
+    name
+    description
+    price
+    image
+  }
+}
+```
+
+Mutations
+
+Register account
+
+```graphql
+mutation {
+  createAccount(account: { name: "Jane", email: "jane@example.com", password: "secret" }) {
+    id
+    name
+    email
+  }
+}
+```
+
+Login and get tokens
+
+```graphql
+mutation {
+  login(account: { email: "jane@example.com", password: "secret" }) {
+    id
+    email
+    backendToken {
+      accessToken
+      refreshToken
+      expiresIn
+    }
+  }
+}
+```
+
+Create an order
+
+```graphql
+mutation {
+  createOrder(order: { accountId: "<ACCOUNT_ID>", products: [{ id: "<PRODUCT_ID>", quantity: 2 }] }) {
+    id
+    totalPrice
+    status
+    products { id name price quantity }
+  }
+}
+```
+
+Notes
+
+- By default, the GraphQL gateway doesn’t require an Authorization header. The Auth service issues tokens that your client app can store and use if you add protected endpoints later.
+
+---
+
+## Kafka + Debezium (CDC)
+
+This repo includes Kafka, Zookeeper, Kafka Connect (Debezium), and a Kafka UI in the Compose stack. After the stack is up, create the source and sink connectors.
+
+1) Ensure Postgres for Account allows logical replication
+
+Add to postgresql.conf (or via a mounted config/ALTER SYSTEM).
+
+```ini
+wal_level=logical
+max_replication_slots=10
+max_wal_senders=10
+```
+
+1. Create connectors using the included JSON files
+
+- Source (Account -> Kafka): `kafka/consumer/consumer-account-auth.json` (Debezium Postgres source)
+- Sink (Kafka -> Auth DB): `kafka/connectors/sink-account-to-auth.json` (JDBC sink)
+
+Example (using curl). Run after the stack is healthy.
+
+```powershell
+# Source connector
+curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" --data @kafka/consumer/consumer-account-auth.json
+
+# Sink connector
+curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" --data @kafka/connectors/sink-account-to-auth.json
+```
+
+1. Inspect topics and connectors
+
+- Kafka UI: <http://localhost:4000>
+- Kafka Connect REST: <http://localhost:8083/connectors>
+
+---
+
+## Development
+
+Code generation
+
+- Protobuf/gRPC (per service), e.g. in `account/`:
+
+```powershell
+cd account
+make gen
+```
+
+- GraphQL schema to Go models/resolvers:
+
+```powershell
+cd graphql
+make gen
+```
+
+Running services locally
+
+- Services default to gRPC port 8080 in containers, and 50051 by default when running locally. Set `PORT` to override. Example for Account:
+
+```powershell
+set PORT=8080; set DATABASE_URL=postgres://wignn:123456@localhost:5432/account?sslmode=disable
+go run ./account/cmd/account
+```
+
+Tip: For local-only runs you’ll need databases and dependencies reachable from your host, or use `docker compose` for the full stack and iterate on code with container restarts.
+
+---
+
+## Configuration
+
+Key environment variables (set by Compose already):
+
+- Account/Auth/Order/Review: `DATABASE_URL`, `PORT`
+- Catalog: `DATABASE_URL` (Elasticsearch URL), `PORT`
+- Auth: `ACCESS_SECRET_KEY`, `REFRESH_SECRET_KEY`
+- GraphQL gateway: `*_SERVICE_URL` for each backend gRPC service
+
+See `compose.yml` for the complete list and defaults.
+
+---
+
+## Troubleshooting
+
+- GraphQL not reachable: ensure `graphql` container is healthy and port 8000 is free.
+- Empty results: seed data may be minimal; create resources via mutations.
+- Debezium errors: verify Postgres `wal_level=logical` and connector configs in Kafka UI.
+- Logs: `docker compose logs -f <service>` (e.g., `graphql`, `account`, `connect`).
+
+---
+
+## License
+
+MIT
