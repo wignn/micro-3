@@ -23,7 +23,6 @@ func NewAuthService(r repository.AuthRepository) AuthService {
 
 func (s authService) Login(c context.Context, l *model.AuthRequest) (*model.AuthResponse, error) {
 	account, err := s.repository.GetAccount(c, l.Email)
-	
 	if err != nil {
 		return nil, err
 	}

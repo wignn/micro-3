@@ -1,5 +1,6 @@
 {
-
+    "name": "account-source",
+    "config": {
       "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
       "plugin.name": "pgoutput",
       "database.hostname": "account_db",
@@ -7,12 +8,12 @@
       "database.user": "wignn",
       "database.password": "123456",
       "database.dbname": "account",
-      "database.server.name": "account",  
+      "database.server.name": "account",
       "table.include.list": "public.accounts",
       "slot.name": "account_slot",
       "publication.autocreate.mode": "filtered",
-      "database.history.kafka.bootstrap.servers": "kafka:9093",      
+      "database.history.kafka.bootstrap.servers": "kafka:9092",
       "database.history.kafka.topic": "schema-changes.account",
       "include.schema.changes": "false"
-    
-  }
+    }
+}
