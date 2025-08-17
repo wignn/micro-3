@@ -1,5 +1,5 @@
 echo "=== Setup Account Source Connector (CDC) ==="
-curl -X POST http://connect:8083/connectors \
+curl -X POST http://localhost:8083/connectors \
   -H "Content-Type: application/json" \
   -d '{
     "name": "account-cdc-source",
@@ -29,7 +29,7 @@ echo -e "\n"
 
 # 3. Setup Sink Connector - Replika ke Auth DB  
 echo "=== Setup Auth Replica Sink Connector ==="
-curl -X POST http://connect:8083/connectors \
+curl -X POST http://localhost:8083/connectors \
   -H "Content-Type: application/json" \
   -d '{
     "name": "auth-replica-sink",
@@ -60,18 +60,18 @@ echo -e "\n"
 
 echo "=== Monitoring Commands ==="
 echo "# Cek status connectors:"
-echo "curl -s http://connect:8083/connectors/account-cdc-source/status | jq ."
-echo "curl -s http://connect:8083/connectors/auth-replica-sink/status | jq ."
+echo "curl -s http://localhost:8083/connectors/account-cdc-source/status | jq ."
+echo "curl -s http://localhost:8083/connectors/auth-replica-sink/status | jq ."
 echo ""
 echo "# Cek topics:"
-echo "curl -s http://connect:8083/connectors | jq ."
+echo "curl -s http://localhost:8083/connectors | jq ."
 echo ""
 echo "# Test data sync:"
 echo "# 1. Insert data ke account database"
 echo "# 2. Cek apakah muncul di auth database sebagai replica"
 
 echo -e "\n=== ALTERNATIF: Simple Replica Setup ==="
-echo "curl -X POST http://connect:8083/connectors \\"
+echo "curl -X POST http://localhost:8083/connectors \\"
 echo "  -H \"Content-Type: application/json\" \\"
 echo "  -d '{"
 echo "    \"name\": \"simple-auth-replica\","
