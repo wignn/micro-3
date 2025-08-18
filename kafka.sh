@@ -103,7 +103,7 @@ echo "=== STEP 4: CREATE SINK CONNECTOR ==="
 sleep 5
 
 echo "Creating PostgreSQL Sink Connector for auth_db..."
-curl -X POST $CONNECT_URL/connectors \
+curl -f -X POST $CONNECT_URL/connectors \
   -H "Content-Type: application/json" \
   -d '{
     "name": "auth-postgres-sink",
@@ -112,9 +112,18 @@ curl -X POST $CONNECT_URL/connectors \
       "connection.url": "jdbc:postgresql://auth_db:5432/auth",
       "connection.username": "wignn",
       "connection.password": "123456",
-      "topics": "account.accounts",
-      "insert.mode": "insert",
+      "topics": "account.public.accounts",
+      "insert.mode": "upsert",
+      "delete.enabled": "true",
+      "pk.mode": "record_key",
+      "pk.fields": "id",
       "table.name.format": "accounts",
+      "auto.create": "true",
+      "auto.evolve": "true",
+      "transforms": "unwrap",
+      "transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+      "transforms.unwrap.drop.tombstones": "true",
+      "transforms.unwrap.delete.handling.mode": "rewrite",
       "key.converter": "org.apache.kafka.connect.json.JsonConverter",
       "value.converter": "org.apache.kafka.connect.json.JsonConverter",
       "key.converter.schemas.enable": "false",
