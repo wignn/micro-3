@@ -50,9 +50,9 @@ services:
       context: .
       dockerfile: ./auth/app.dockerfile
     depends_on:
-      - auth_db
+      - account_db
     environment:
-      DATABASE_URL: postgres://wignn:123456@auth_db/auth?sslmode=disable
+      DATABASE_URL: postgres://wignn:123456@account_db/account?sslmode=disable
       PORT: 8080
       ACCESS_SECRET_KEY: sivlia
       REFRESH_SECRET_KEY: sivlia2

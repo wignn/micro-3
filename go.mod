@@ -5,6 +5,7 @@ go 1.24.1
 require (
 	github.com/99designs/gqlgen v0.17.73
 	github.com/golang-jwt/jwt/v5 v5.2.2
+	github.com/gorilla/handlers v1.5.2
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/segmentio/ksuid v1.0.4
@@ -18,6 +19,7 @@ require (
 
 require (
 	github.com/agnivade/levenshtein v1.2.1 // indirect
+	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/go-viper/mapstructure/v2 v2.2.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
