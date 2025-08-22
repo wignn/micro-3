@@ -51,5 +51,5 @@ func main() {
     mux.Handle("/graphql", handler.NewDefaultServer(schema))
     mux.Handle("/playground", playground.Handler("GraphQL playground", "/graphql"))
 
-    log.Fatal(http.ListenAndServe(":8080", corsHandler(mux)))
+    log.Fatal(http.ListenAndServe(":8000", corsHandler(mux)))
 }
