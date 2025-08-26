@@ -52,7 +52,8 @@ func main() {
     corsHandler := handlers.CORS(
         handlers.AllowedOrigins([]string{
             "http://localhost:3000",   
-            "http://54.242.132.124:3000",  
+            "http://54.242.132.124:3000",
+            
         }),
         handlers.AllowedMethods([]string{"GET", "POST", "OPTIONS"}),
         handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
