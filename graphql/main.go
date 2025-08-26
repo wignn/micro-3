@@ -3,7 +3,6 @@ package main
 import (
     "log"
     "net/http"
-
     "github.com/99designs/gqlgen/graphql/handler"
     "github.com/99designs/gqlgen/graphql/playground"
     "github.com/gorilla/handlers"
