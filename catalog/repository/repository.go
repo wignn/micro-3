@@ -7,7 +7,7 @@ import (
 	"log"
 
 	"github.com/wignn/micro-3/catalog/model"
-	elastic "gopkg.in/olivere/elastic.v5"
+    elastic "github.com/olivere/elastic/v7"
 )
 
 var (
