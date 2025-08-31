@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS reviews (
   rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
   content TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE OR REPLACE FUNCTION update_updated_at_column()
