@@ -44,7 +44,6 @@ func (r *elasticRepository) Close() {}
 func (r *elasticRepository) PutProduct(c context.Context, p *model.Product) error {
     _, err := r.client.Index().
         Index("catalog").
-        // Remove Type("product") - not supported in ES 7.x+
         Id(p.ID).
         BodyJson(model.ProductDocument{
             Name:        p.Name,
@@ -59,7 +58,6 @@ func (r *elasticRepository) PutProduct(c context.Context, p *model.Product) erro
 func (r *elasticRepository) GetProductByID(c context.Context, id string) (*model.Product, error) {
     res, err := r.client.Get().
         Index("catalog").
-        // Remove Type("product")
         Id(id).
         Do(c)
     if err != nil {
@@ -84,7 +82,6 @@ func (r *elasticRepository) GetProductByID(c context.Context, id string) (*model
 func (r *elasticRepository) ListProducts(c context.Context, skip, take uint64) ([]*model.Product, error) {
     res, err := r.client.Search().
         Index("catalog").
-        // Remove Type("product")
         Query(elastic.NewMatchAllQuery()).
         From(int(skip)).Size(int(take)).
         Do(c)
@@ -113,7 +110,6 @@ func (r *elasticRepository) ListProductsWithIDs(c context.Context, ids []string)
     for _, id := range ids {
         items = append(items, elastic.NewMultiGetItem().
             Index("catalog").
-            // Remove Type("product")
             Id(id))
     }
     res, err := r.client.MultiGet().
@@ -144,7 +140,6 @@ func (r *elasticRepository) ListProductsWithIDs(c context.Context, ids []string)
 func (r *elasticRepository) SearchProducts(c context.Context, query string, skip, take uint64) ([]*model.Product, error) {
     res, err := r.client.Search().
         Index("catalog").
-        // Remove Type("product")
         Query(elastic.NewMultiMatchQuery(query, "name", "description")).
         From(int(skip)).Size(int(take)).
         Do(c)
@@ -171,7 +166,6 @@ func (r *elasticRepository) SearchProducts(c context.Context, query string, skip
 func (r *elasticRepository) DeletedProduct(c context.Context, id string) error {
     _, err := r.client.Delete().
         Index("catalog").
-        // Remove Type("product")
         Id(id).
         Do(c)
     if err != nil {
@@ -184,7 +178,6 @@ func (r *elasticRepository) DeletedProduct(c context.Context, id string) error {
 func (r *elasticRepository) EditProduct(c context.Context, id string, name, description string, price float64, image string) (*model.Product, error) {
     _, err := r.client.Update().
         Index("catalog").
-        // Remove Type("product")
         Id(id).
         Doc(model.ProductDocument{
             Name:        name,
