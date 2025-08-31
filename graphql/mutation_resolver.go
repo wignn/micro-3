@@ -107,11 +107,32 @@ func (r *mutationResolver) CreateReview(ctx context.Context, in ReviewInput) (*R
 		return nil, handleError("CreateReview", err)
 	}
 
+	product, err := r.server.catalogClient.GetProduct(ctx, in.ProductID);
+	if err != nil {
+		return  nil, handleError("CreateReview", err)
+	}
+
+	account, err := r.server.accountClient.GetAccount(ctx, in.AccountID)
+	if err != nil {
+		return nil, handleError("CreateReview", err)
+	}
+
 	return &Review{
 		ID:        review.ID,
 		Rating:    int(review.Rating),
 		Content:   &review.Content,
 		CreatedAt: review.CreatedAt,
+		Product: &Product{
+			ID: product.Id,
+			Name: product.Name,
+		Price: float64(product.Price),
+			Image: product.Image,
+		},
+		Account: &Account{
+			ID: account.ID,
+			Name: account.Name,
+			Email: account.Email,
+		},
 	}, nil
 }
 
