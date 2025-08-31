@@ -125,7 +125,7 @@ func (r *mutationResolver) CreateReview(ctx context.Context, in ReviewInput) (*R
 		Product: &Product{
 			ID: product.Id,
 			Name: product.Name,
-			Price: product.Price,
+		Price: float64(product.Price),
 			Image: product.Image,
 		},
 		Account: &Account{
